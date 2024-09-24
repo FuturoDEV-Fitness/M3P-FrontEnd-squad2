@@ -1,11 +1,17 @@
-import Dashboard from './pages/dashboard'
+import { Outlet } from "react-router-dom";
 
-import './App.css'
+import Header from "./components/atoms/header";
+import Footer from "./components/atoms/footer";
+import "./App.css";
 
 function App() {
   return (
-    <Dashboard />
-  )
+    <>
+      <Header />
+      <Outlet />
+      <Footer />
+    </>
+  );
 }
 
-export default App
+export default App;
