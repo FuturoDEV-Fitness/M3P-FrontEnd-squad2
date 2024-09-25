@@ -1,9 +1,7 @@
+import CTemplateDashboard from "../../components/templates/CTemplateDashboard";
+
 function Dashboard() {
-    return (
-        <div>
-            <h1>Dashboard</h1>
-        </div>
-    );
+ return <CTemplateDashboard />;
 }
 
 export default Dashboard;
