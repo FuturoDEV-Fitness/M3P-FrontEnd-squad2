@@ -7,7 +7,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import CircleIcon from "@mui/icons-material/Circle";
 
 function CTitleDashboard() {
- const { exercicios, usuariosOnline, usuarioOnlineNomes } =
+ const { exercicios } =
   useContext(ExerciciosContext);
 
  const [isExibirNomes, setIsExibirNomes] = useState(false);
@@ -58,7 +58,7 @@ function CTitleDashboard() {
     <div
      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
      <p style={{ textAlign: "center" }}>
-      Usuarios online: <span className={styles.count}>{usuariosOnline}</span>
+      Usuarios online: <span className={styles.count}>"usuarios.length"</span>
      </p>
      {isExibirNomes ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
      <div
@@ -69,14 +69,14 @@ function CTitleDashboard() {
        transition: "max-height 0.3s ease",
        margin: "0.5rem"
       }}>
-      {usuarioOnlineNomes.map((nome) => (
+      {/* {usuarioOnlineNomes.map((nome) => (
        <p key={nome} style={{ paddingTop: "0.5rem" }}>
         <CircleIcon
          sx={{ color: "#00db00", fontSize: "0.7rem", marginRight: "0.5rem" }}
         />
         {nome}
        </p>
-      ))}
+      ))} */}
      </div>
     </div>
    </div>
