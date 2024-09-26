@@ -4,6 +4,7 @@ import Login from '../pages/login'
 import CadastroUsuario from '../pages/cadastroUsuario'
 import Dashboard from '../pages/dashboard'
 import Locais from '../pages/locais'
+import CadastroLocais from '../pages/cadastroLocais'
 
 export const router = createBrowserRouter([
     {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
             {
                 path: '/locais-exercicios',
                 element: <Locais />,
+            },
+            {
+                path: '/cadastro-locais',
+                element: <CadastroLocais />,
             }
         ]
     },
