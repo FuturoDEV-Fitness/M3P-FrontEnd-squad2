@@ -5,7 +5,7 @@ import styles from "../../pages/pagesCSS/Login.module.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
-//import { UsuariosContext } from "../../context/UsuariosContext";
+import { UsuariosContext } from "../../context/UsuariosContext";
 
 function CFormLogin() {
   const {
@@ -14,11 +14,11 @@ function CFormLogin() {
     formState: { errors },
   } = useForm();
 
-  //const { onSubmitFormLogin, senhaError, emailError, gotoRegister } = useContext(UsuariosContext);
+  const { onSubmitFormLogin, senhaError, emailError, gotoRegister } = useContext(UsuariosContext);
   return (
     <form
       className={styles.form}
-      // onSubmit={handleSubmit((formLogin) => onSubmitFormLogin(formLogin))}
+     onSubmit={handleSubmit((formLogin) => onSubmitFormLogin(formLogin))}
     >
       <div className={styles.inputContainer}>
         <CTextField
@@ -31,7 +31,7 @@ function CFormLogin() {
           })}
         />
         {errors.email && <p className={styles.error}>{errors.email.message}</p>}
-        {/* emailError && <p className={styles.error}>{emailError}</p> */}
+        {emailError && <p className={styles.error}>{emailError}</p>}
       </div>
       <div className={styles.inputContainer}>
         <CTextField
@@ -52,15 +52,15 @@ function CFormLogin() {
           })}
         />
         {errors.senha && <p className={styles.error}>{errors.senha.message}</p>}
-        {/* senhaError && <p className={styles.error}>{senhaError}</p>} */}
+        {senhaError && <p className={styles.error}>{senhaError}</p>} 
       </div>
       <Link to={"/"}>Esqueceu a senha?</Link>
       <CButton
 
 
         // Ambiente de teste
-        component={Link} 
-        to="/" 
+        component={Link}
+        to="/"
         // ......
 
 
@@ -75,7 +75,7 @@ function CFormLogin() {
         Entrar
       </CButton>
       <CButton
-        //onClick={() => gotoRegister()}
+        onClick={() => gotoRegister()}
         className={styles.link}
         variant="outlined"
         sx={{
