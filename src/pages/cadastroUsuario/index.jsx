@@ -1,9 +1,9 @@
+import CTemplateCadastroUsuario from "../../components/templates/CTemplateCadastroUsuario";
+
+
 function CadastroUsuario() {
-    return (
-        <div>
-            <h1>Cadastro de Usuário</h1>
-        </div>
-    );
+
+    return <CTemplateCadastroUsuario />;
 }
 
 export default CadastroUsuario;
