@@ -1,4 +1,5 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
+import { CepContext } from "./CepContext";
 import * as Yup from "yup";
 
 export const UsuariosContext = createContext();
@@ -14,6 +15,9 @@ const formatarCPF = (cpf) => {
 };
 
 export const UsuariosContextProvider = ({ children }) => {
+
+  const { endereco } = useContext(CepContext);
+
   const validationSchema = Yup.object().shape({
     nome: Yup.string()
       .required("Nome de usuário obrigatório")
@@ -26,7 +30,7 @@ export const UsuariosContextProvider = ({ children }) => {
       .min(5, "E-mail muito pequeno"),
     cpf: Yup.string()
       .required("CPF obrigatório")
-      .length(11, "CPF deve ter 11 caracteres"), 
+      .length(11, "CPF deve ter 11 caracteres"),
     data_nascimento: Yup.string()
       .required("Data de nascimento obrigatória")
       .max(10, "Data de nascimento inválida")
@@ -34,11 +38,13 @@ export const UsuariosContextProvider = ({ children }) => {
     sexo: Yup.string().required("Sexo obrigatório"),
     cep: Yup.string()
       .required("CEP obrigatório")
-      .length(8, "CEP deve ter 8 caracteres"), 
+      .length(8, "CEP deve ter 8 caracteres"),
     endereco_numero: Yup.string()
       .required("Número obrigatório")
       .max(8, "Número muito grande")
       .min(1, "Número muito pequeno"),
+    complemento: Yup.string()
+      .max(20, "Complemento muito grande"),
     password: Yup.string()
       .required("Senha obrigatória")
       .max(16, "Senha muito grande")
@@ -60,8 +66,15 @@ export const UsuariosContextProvider = ({ children }) => {
       sexo: formCadastro.sexo,
       data_nascimento: formCadastro.data_nascimento,
       endereco: {
-        cep: formCadastro.cep,
+        rua: endereco.address,
         numero: formCadastro.endereco_numero,
+        complemento: formCadastro.complemento || "",
+        cidade: endereco.city,
+        bairro: endereco.district,
+        estado: endereco.state,
+        cep: formCadastro.cep,
+        latitude: endereco.lat,
+        longitude: endereco.lng,
       },
     };
 
@@ -79,13 +92,13 @@ export const UsuariosContextProvider = ({ children }) => {
         if (errorData.mensagem === "Email já cadastrado") {
           setError("email", {
             type: "manual",
-            message: errorData.mensagem, 
+            message: errorData.mensagem,
           });
         }
         if (errorData.mensagem === "CPF já cadastrado") {
           setError("cpf", {
             type: "manual",
-            message: errorData.mensagem, 
+            message: errorData.mensagem,
           });
         }
         throw new Error(errorData.mensagem || "Erro na requisição");

@@ -36,7 +36,7 @@ function CFormCadastroUsuario() {
       <div className={stylesCadastro.textFields}>
         <CTextField
           variant="standard"
-          label="Nome de usuário"
+          label="Nome de usuário *"
           type="text"
           fullWidth
           {...register("nome")}
@@ -45,7 +45,7 @@ function CFormCadastroUsuario() {
         />
         <CTextField
           variant="standard"
-          label="E-mail"
+          label="E-mail *"
           type="email"
           fullWidth
           {...register("email")}
@@ -56,7 +56,7 @@ function CFormCadastroUsuario() {
       <div className={stylesCadastro.textFields}>
         <CTextField
           variant="standard"
-          label="CPF"
+          label="CPF *"
           type="number"
           fullWidth
           {...register("cpf")}
@@ -65,7 +65,7 @@ function CFormCadastroUsuario() {
         />
         <CTextField
           variant="standard"
-          label="Data de nascimento"
+          label="Data de nascimento *"
           type="date"
           defaultValue="2024-01-01"
           fullWidth
@@ -78,7 +78,7 @@ function CFormCadastroUsuario() {
         <CTextField
           id="standard-select-currency"
           variant="standard"
-          label="Sexo"
+          label="Sexo *"
           select
           defaultValue=""
           fullWidth
@@ -94,7 +94,7 @@ function CFormCadastroUsuario() {
         </CTextField>
         <CTextField
           variant="standard"
-          label="CEP"
+          label="CEP *"
           type="number"
           fullWidth
           {...register("cep", {
@@ -136,7 +136,7 @@ function CFormCadastroUsuario() {
         <CTextField
           type="number"
           variant="standard"
-          label="Numero"
+          label="Numero *"
           {...register("endereco_numero")}
           error={!!errors.endereco_numero}
           helperText={
@@ -150,12 +150,14 @@ function CFormCadastroUsuario() {
           label="Complemento"
           fullWidth
           {...register("complemento")}
+          error={!!errors.complemento}
+          helperText={errors.complemento ? errors.complemento.message : ""}
         ></CTextField>
       </div>
       <div className={stylesCadastro.textFields}>
         <CTextField
           variant="standard"
-          label="Senha"
+          label="Senha *"
           type="password"
           fullWidth
           {...register("password")}
@@ -164,7 +166,7 @@ function CFormCadastroUsuario() {
         />
         <CTextField
           variant="standard"
-          label="Confirmar Senha"
+          label="Confirmar Senha *"
           type="password"
           fullWidth
           {...register("confirmar_password")}
@@ -173,11 +175,6 @@ function CFormCadastroUsuario() {
             errors.confirmar_password ? errors.confirmar_password.message : ""
           }
         />
-      </div>
-      <div className={stylesCadastro.errorDuplo}>
-        {errors.senha && <p>{errors.senha.message}</p>}
-        {errors.confirmar_senha && <p>{errors.confirmar_senha.message}</p>}
-        {/* {senhaError === "As senhas precisam ser iguais" && <p>{senhaError}</p>} */}
       </div>
       <CButton
         className={stylesCadastro.button}
