@@ -1,247 +1,118 @@
-import { createContext, useState, useEffect } from "react";
-import useFetch from "../hooks/useFetch";
+import { createContext } from "react";
+import * as Yup from "yup";
 
 export const UsuariosContext = createContext();
-let url = "http://localhost:3000/usuarios";
+let url = "http://localhost:3333/api/usuarios";
+
+// Função para formatar o CPF
+const formatarCPF = (cpf) => {
+  return cpf
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{3})(\d)/, "$1.$2") // Adiciona o primeiro ponto
+    .replace(/(\d{3})(\d)/, "$1.$2") // Adiciona o segundo ponto
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Adiciona o hífen
+};
+
 export const UsuariosContextProvider = ({ children }) => {
- const { data, loading, isVisible } = useFetch(url);
+  const validationSchema = Yup.object().shape({
+    nome: Yup.string()
+      .required("Nome de usuário obrigatório")
+      .max(30, "Nome de usuário muito grande")
+      .min(5, "Nome de usuário muito pequeno"),
+    email: Yup.string()
+      .required("E-mail obrigatório")
+      .email("E-mail inválido")
+      .max(60, "E-mail muito grande")
+      .min(5, "E-mail muito pequeno"),
+    cpf: Yup.string()
+      .required("CPF obrigatório")
+      .length(11, "CPF deve ter 11 caracteres"), 
+    data_nascimento: Yup.string()
+      .required("Data de nascimento obrigatória")
+      .max(10, "Data de nascimento inválida")
+      .min(10, "Data de nascimento inválida"),
+    sexo: Yup.string().required("Sexo obrigatório"),
+    cep: Yup.string()
+      .required("CEP obrigatório")
+      .length(8, "CEP deve ter 8 caracteres"), 
+    endereco_numero: Yup.string()
+      .required("Número obrigatório")
+      .max(8, "Número muito grande")
+      .min(1, "Número muito pequeno"),
+    password: Yup.string()
+      .required("Senha obrigatória")
+      .max(16, "Senha muito grande")
+      .min(8, "Senha muito pequena"),
+    confirmar_password: Yup.string()
+      .required("Confirme sua senha")
+      .max(16, "Senha muito grande")
+      .min(8, "Senha muito pequena")
+      .oneOf([Yup.ref("password")], "As senhas devem ser iguais"),
+  });
 
- const [usuarios, setUsuarios] = useState([]);
- const [senhaError, setSenhaError] = useState(null);
- const [cpfError, setCpfError] = useState(null);
- const [emailError, setEmailError] = useState(null);
+  async function onSubmitFormCadastro(formCadastro, setError) {
+    const cpfFormatado = formatarCPF(formCadastro.cpf);
+    const dataForm = {
+      nome: formCadastro.nome,
+      email: formCadastro.email,
+      password: formCadastro.password,
+      cpf: cpfFormatado,
+      sexo: formCadastro.sexo,
+      data_nascimento: formCadastro.data_nascimento,
+      endereco: {
+        cep: formCadastro.cep,
+        numero: formCadastro.endereco_numero,
+      },
+    };
 
- useEffect(() => {
-  if (!loading && data) {
-   setUsuarios(data);
-  }
- }, [data, loading]);
-
- async function lerUsuariosDb() {
-  try {
-   let res = await fetch(url);
-   let data = await res.json();
-   setUsuarios(data);
-  } catch (err) {
-   alert(err);
-  }
- }
-
- function onSubmitFormCadastro(formCadastro) {
-  if (usuarios.find((user) => user.email === formCadastro.email)) {
-   setEmailError("Email já cadastrado");
-   setCpfError(null);
-   setSenhaError(null);
-   return;
-  }
-  if (usuarios.find((user) => user.cpf === formCadastro.cpf)) {
-   setCpfError("CPF já cadastrado");
-   setSenhaError(null);
-   setEmailError(null);
-   return;
-  }
-  if (formCadastro.senha !== formCadastro.confirmar_senha) {
-   setSenhaError("As senhas precisam ser iguais");
-   setCpfError(null);
-   setEmailError(null);
-   return;
-  }
-
-  setCpfError(null);
-  setSenhaError(null);
-  setEmailError(null);
-  cadastrarUsuarioDb(formCadastro);
-  gotoLogin();
- }
-
- function cadastrarUsuarioDb(formCadastro) {
-  fetch(url, {
-   method: "POST",
-   body: JSON.stringify(formCadastro),
-   headers: {
-    "Content-Type": "application/json"
-   }
-  })
-   .then(() => {
-    lerUsuariosDb();
-    alert("Usuário cadastrado com sucesso!");
-   })
-   .catch(() => alert("Erro ao cadastrar usuário!"));
- }
-
- async function onSubmitFormLogin(formLogin) {
-  try {
-   let userLogged = false;
-   let usuarioEncontrado = usuarios.find(
-    (user) => user.email == formLogin.email
-   );
-
-   if (usuarioEncontrado) {
-    if (usuarioEncontrado.senha === formLogin.senha) {
-     setSenhaError(null);
-     setEmailError(null);
-     userLogged = true;
-     localStorage.setItem("userLogged", userLogged);
-     localStorage.setItem("userId", JSON.stringify(usuarioEncontrado.id));
-     atualizarStatus(usuarioEncontrado, usuarioEncontrado.id);
-     window.location.href = "/";
-    } else {
-     setSenhaError("Senha inválida");
-     setEmailError(null);
-    }
-   } else {
-    setEmailError("Email inválido");
-    setSenhaError(null);
-   }
-  } catch (err) {
-   console.log(err);
-  }
- }
-
- async function atualizarStatus(usuario, id) {
-  try {
-   const usuarioAtualizado = {
-    ...usuario,
-    online: !usuario.online
-   };
-   await fetch(`http://localhost:3000/usuarios/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(usuarioAtualizado),
-    headers: {
-     "Content-Type": "application/json"
-    }
-   });
-   lerUsuariosDb();
-  } catch (err) {
-   console.log(err);
-  }
- }
-
- async function logout(id) {
-  try {
-   let res = await fetch(`http://localhost:3000/usuarios/${id}`);
-   let data = await res.json();
-   const usuarioLogged = {
-    ...data,
-    online: !data.online
-   };
-   await fetch(`http://localhost:3000/usuarios/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(usuarioLogged),
-    headers: {
-     "Content-Type": "application/json"
-    }
-   });
-   window.location.href = "/login";
-   localStorage.clear();
-  } catch (err) {
-   alert(err);
-  }
- }
-
- function gotoLogin() {
-  window.location.href = "/login";
- }
-
- function gotoRegister() {
-  window.location.href = "/cadastro-usuario";
- }
-
- function atualizarPerfil(form) {
-  if (form.senha === form.confirmar_senha) {
-   let id = JSON.parse(localStorage.getItem("userId"));
-   fetch(`http://localhost:3000/usuarios/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(form),
-    headers: {
-     "Content-Type": "application/json"
-    }
-   });
-   fetch("http://localhost:3000/exercicios")
-    .then((res) => res.json())
-    .then((data) => {
-     const exercicios = Array.isArray(data) ? data : [];
-     for (const exercicio of exercicios) {
-      if (exercicio.id_usuario === form.id) {
-       exercicio.nome_usuario = form.nome;
-       console.log(exercicio);
-       fetch(`http://localhost:3000/exercicios/${exercicio.id}`, {
-        method: "PUT",
-        body: JSON.stringify(exercicio),
+    try {
+      const res = await fetch(url, {
+        method: "POST",
         headers: {
-         "Content-Type": "application/json"
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataForm),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        if (errorData.mensagem === "Email já cadastrado") {
+          setError("email", {
+            type: "manual",
+            message: errorData.mensagem, 
+          });
         }
-       });
+        if (errorData.mensagem === "CPF já cadastrado") {
+          setError("cpf", {
+            type: "manual",
+            message: errorData.mensagem, 
+          });
+        }
+        throw new Error(errorData.mensagem || "Erro na requisição");
       }
-     }
-    });
-   return;
-  }
-  if (form.senha !== form.confirmar_senha) {
-   alert("As senhas precisam ser iguais");
-   return;
-  }
- }
 
- function excluirUsuario(id) {
-  fetch("http://localhost:3000/exercicios")
-   .then((res) => res.json())
-   .then((data) => {
-    const locaisUsuario = data.filter((data) => data.id_usuario === id);
-    if (locaisUsuario.length > 0) {
-     alert(
-      "Não foi possível excluir o usuário, existe locais vinculados a ele"
-     );
-     return;
+      const data = await res.json();
+      console.log("Usuário cadastrado com sucesso:", data);
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error.message);
     }
-    if (confirm("Tem certeza que deseja excluir o usuário?")) {
-     fetch(`http://localhost:3000/usuarios/${id}`, {
-      method: "DELETE",
-      headers: {
-       "Content-Type": "application/json"
-      }
-     });
-     window.location.href = "/";
-     localStorage.clear();
-    }
-   });
- }
-
- const options = [
-  {
-   label: "Masculino",
-   value: "Masculino"
-  },
-  {
-   label: "Feminino",
-   value: "Feminino"
-  },
-  {
-   label: "Outro",
-   value: "Outro"
   }
- ];
 
- return (
-  <UsuariosContext.Provider
-   value={{
-    usuarios,
-    loading,
-    isVisible,
-    setUsuarios,
-    onSubmitFormCadastro,
-    onSubmitFormLogin,
-    gotoLogin,
-    gotoRegister,
-    senhaError,
-    cpfError,
-    emailError,
-    options,
-    logout,
-    atualizarPerfil,
-    excluirUsuario
-   }}>
-   {children}
-  </UsuariosContext.Provider>
- );
+  const options = [
+    { label: "Masculino", value: "masculino" },
+    { label: "Feminino", value: "feminino" },
+    { label: "Outro", value: "outro" },
+  ];
+
+  return (
+    <UsuariosContext.Provider
+      value={{
+        validationSchema,
+        onSubmitFormCadastro,
+        options,
+      }}
+    >
+      {children}
+    </UsuariosContext.Provider>
+  );
 };
