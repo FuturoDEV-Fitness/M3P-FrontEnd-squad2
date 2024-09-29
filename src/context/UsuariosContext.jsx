@@ -1,9 +1,12 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
+
 import { CepContext } from "./CepContext";
 import { formatarCPF } from "../validation/registrationValidationSchema"
 
 export const UsuariosContext = createContext();
-let url = "http://localhost:3333/api/usuarios";
+let url = "http://localhost:3333/api";
+
+const [ session, setSession ] = useState({})
 
 
 export const UsuariosContextProvider = ({ children }) => {
@@ -16,6 +19,7 @@ export const UsuariosContextProvider = ({ children }) => {
       nome: formCadastro.nome,
       email: formCadastro.email,
       password: formCadastro.password,
+      confirmar_senha: formCadastro.confirmar_password,
       cpf: cpfFormatado,
       sexo: formCadastro.sexo,
       data_nascimento: formCadastro.data_nascimento,
@@ -33,7 +37,7 @@ export const UsuariosContextProvider = ({ children }) => {
     };
 
     try {
-      const res = await fetch(url, {
+      const res = await fetch(`${url}/usuarios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +71,7 @@ export const UsuariosContextProvider = ({ children }) => {
 
   async function onSubmitFormLogin(formLogin) {
     try {
-      const res = await fetch(`${url}/login`, {
+      const res = await fetch(`${url}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,8 +86,9 @@ export const UsuariosContextProvider = ({ children }) => {
       }
   
       // Se a resposta foi bem-sucedida, processe os dados
-      const data = await res.json();
-      console.log(data.message); // Acesse a mensagem de sucesso
+      const {token} = await res.json();
+      localStorage.setItem("tokenJWT", JSON.stringify({token}));
+      window.location.href = "/";
     } catch (error) {
       console.error("Erro:", error.message); // Mostra a mensagem de erro
     }

@@ -39,10 +39,10 @@ export const validationSchemaCadastro = Yup.object().shape({
     password: Yup.string()
         .required("Senha obrigatória")
         .max(16, "Senha muito grande")
-        .min(8, "Senha muito pequena"),
+        .min(6, "Senha muito pequena"),
     confirmar_password: Yup.string()
         .required("Confirme sua senha")
         .max(16, "Senha muito grande")
-        .min(8, "Senha muito pequena")
+        .min(6, "Senha muito pequena")
         .oneOf([Yup.ref("password")], "As senhas devem ser iguais"),
 });

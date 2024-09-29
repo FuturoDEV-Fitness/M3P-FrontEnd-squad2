@@ -9,5 +9,5 @@ export const validationSchemaLogin = Yup.object().shape({
     password: Yup.string()
       .required("Senha obrigatória")
       .max(16, "Senha muito grande")
-      .min(8, "Senha muito pequena"),
+      .min(6, "Senha muito pequena"),
   });
