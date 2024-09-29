@@ -8,9 +8,10 @@ import { MenuItem } from "@mui/material";
 import { useContext } from "react";
 import { UsuariosContext } from "../../context/UsuariosContext";
 import { CepContext } from "../../context/CepContext";
+import { validationSchemaCadastro } from "../../validation/registrationValidationSchema";
 
 function CFormCadastroUsuario() {
-  const { onSubmitFormCadastro, options, validationSchema } =
+  const { onSubmitFormCadastro, options } =
     useContext(UsuariosContext);
 
   const {
@@ -21,7 +22,7 @@ function CFormCadastroUsuario() {
     setError,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchemaCadastro),
   });
 
   const { buscarCep } = useContext(CepContext);

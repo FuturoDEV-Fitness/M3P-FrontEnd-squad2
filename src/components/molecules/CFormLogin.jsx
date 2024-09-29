@@ -3,22 +3,31 @@ import CButton from "../atoms/CButton";
 import styles from "../../pages/pagesCSS/Login.module.css";
 
 import { Link } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { UsuariosContext } from "../../context/UsuariosContext";
+import { validationSchemaLogin } from "../../validation/loginValidationSchema";
 
 function CFormLogin() {
+  const { onSubmitFormLogin } = useContext(UsuariosContext);
+
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(validationSchemaLogin),
+  });
 
-  const { onSubmitFormLogin, senhaError, emailError, gotoRegister } = useContext(UsuariosContext);
+  const onSubmit = (formData) => {
+    onSubmitFormLogin(formData);
+  };
+
   return (
     <form
       className={styles.form}
-     onSubmit={handleSubmit((formLogin) => onSubmitFormLogin(formLogin))}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className={styles.inputContainer}>
         <CTextField
@@ -26,12 +35,10 @@ function CFormLogin() {
           variant="standard"
           type="email"
           fullWidth
-          {...register("email", {
-            required: "Email obrigatório",
-          })}
+          {...register("email")}
+          error={!!errors.email}
+          helperText={errors.email?.message}
         />
-        {errors.email && <p className={styles.error}>{errors.email.message}</p>}
-        {emailError && <p className={styles.error}>{emailError}</p>}
       </div>
       <div className={styles.inputContainer}>
         <CTextField
@@ -39,33 +46,15 @@ function CFormLogin() {
           variant="standard"
           type="password"
           fullWidth
-          {...register("senha", {
-            required: "Senha obrigatória",
-            minLength: {
-              value: 8,
-              message: "Senha muito curta (8 caracteres)",
-            },
-            maxLength: {
-              value: 16,
-              message: "Senha muito longa (16 caracteres)",
-            },
-          })}
+          {...register("password")}
+          error={!!errors.password}
+          helperText={errors.password?.message}
         />
-        {errors.senha && <p className={styles.error}>{errors.senha.message}</p>}
-        {senhaError && <p className={styles.error}>{senhaError}</p>} 
       </div>
       <Link to={"/"}>Esqueceu a senha?</Link>
       <CButton
-
-
-        // Ambiente de teste
-        component={Link}
-        to="/"
-        // ......
-
-
-        variant="contained"
         type="submit"
+        variant="contained"
         sx={{
           backgroundColor: "#01161e",
           color: "#eff6e0",
@@ -75,7 +64,6 @@ function CFormLogin() {
         Entrar
       </CButton>
       <CButton
-        onClick={() => gotoRegister()}
         className={styles.link}
         variant="outlined"
         sx={{
@@ -89,5 +77,6 @@ function CFormLogin() {
     </form>
   );
 }
+
 
 export default CFormLogin;
