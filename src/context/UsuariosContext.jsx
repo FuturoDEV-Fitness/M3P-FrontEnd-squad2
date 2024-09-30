@@ -1,247 +1,123 @@
-import { createContext, useState, useEffect } from "react";
-import useFetch from "../hooks/useFetch";
+import { createContext, useContext } from "react";
+
+import { CepContext } from "./CepContext";
+import { formatarCPF } from "../validation/registrationValidationSchema"
+import useAuth from "../hooks/useAuth";
 
 export const UsuariosContext = createContext();
-let url = "http://localhost:3000/usuarios";
+let url = "http://localhost:3333/api";
+
 export const UsuariosContextProvider = ({ children }) => {
- const { data, loading, isVisible } = useFetch(url);
 
- const [usuarios, setUsuarios] = useState([]);
- const [senhaError, setSenhaError] = useState(null);
- const [cpfError, setCpfError] = useState(null);
- const [emailError, setEmailError] = useState(null);
+  const { endereco } = useContext(CepContext);
+  const { saveToken, saveSession, decodeToken, clearSession } = useAuth()
 
- useEffect(() => {
-  if (!loading && data) {
-   setUsuarios(data);
-  }
- }, [data, loading]);
+  async function onSubmitFormCadastro(formCadastro, setError) {
+    const cpfFormatado = formatarCPF(formCadastro.cpf);
+    const dataForm = {
+      nome: formCadastro.nome,
+      email: formCadastro.email,
+      password: formCadastro.password,
+      confirmar_senha: formCadastro.confirmar_password,
+      cpf: cpfFormatado,
+      sexo: formCadastro.sexo,
+      data_nascimento: formCadastro.data_nascimento,
+      endereco: {
+        rua: endereco.address,
+        numero: formCadastro.endereco_numero,
+        complemento: formCadastro.complemento || "",
+        cidade: endereco.city,
+        bairro: endereco.district,
+        estado: endereco.state,
+        cep: formCadastro.cep,
+        latitude: endereco.lat,
+        longitude: endereco.lng,
+      },
+    };
 
- async function lerUsuariosDb() {
-  try {
-   let res = await fetch(url);
-   let data = await res.json();
-   setUsuarios(data);
-  } catch (err) {
-   alert(err);
-  }
- }
-
- function onSubmitFormCadastro(formCadastro) {
-  if (usuarios.find((user) => user.email === formCadastro.email)) {
-   setEmailError("Email já cadastrado");
-   setCpfError(null);
-   setSenhaError(null);
-   return;
-  }
-  if (usuarios.find((user) => user.cpf === formCadastro.cpf)) {
-   setCpfError("CPF já cadastrado");
-   setSenhaError(null);
-   setEmailError(null);
-   return;
-  }
-  if (formCadastro.senha !== formCadastro.confirmar_senha) {
-   setSenhaError("As senhas precisam ser iguais");
-   setCpfError(null);
-   setEmailError(null);
-   return;
-  }
-
-  setCpfError(null);
-  setSenhaError(null);
-  setEmailError(null);
-  cadastrarUsuarioDb(formCadastro);
-  gotoLogin();
- }
-
- function cadastrarUsuarioDb(formCadastro) {
-  fetch(url, {
-   method: "POST",
-   body: JSON.stringify(formCadastro),
-   headers: {
-    "Content-Type": "application/json"
-   }
-  })
-   .then(() => {
-    lerUsuariosDb();
-    alert("Usuário cadastrado com sucesso!");
-   })
-   .catch(() => alert("Erro ao cadastrar usuário!"));
- }
-
- async function onSubmitFormLogin(formLogin) {
-  try {
-   let userLogged = false;
-   let usuarioEncontrado = usuarios.find(
-    (user) => user.email == formLogin.email
-   );
-
-   if (usuarioEncontrado) {
-    if (usuarioEncontrado.senha === formLogin.senha) {
-     setSenhaError(null);
-     setEmailError(null);
-     userLogged = true;
-     localStorage.setItem("userLogged", userLogged);
-     localStorage.setItem("userId", JSON.stringify(usuarioEncontrado.id));
-     atualizarStatus(usuarioEncontrado, usuarioEncontrado.id);
-     window.location.href = "/";
-    } else {
-     setSenhaError("Senha inválida");
-     setEmailError(null);
-    }
-   } else {
-    setEmailError("Email inválido");
-    setSenhaError(null);
-   }
-  } catch (err) {
-   console.log(err);
-  }
- }
-
- async function atualizarStatus(usuario, id) {
-  try {
-   const usuarioAtualizado = {
-    ...usuario,
-    online: !usuario.online
-   };
-   await fetch(`http://localhost:3000/usuarios/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(usuarioAtualizado),
-    headers: {
-     "Content-Type": "application/json"
-    }
-   });
-   lerUsuariosDb();
-  } catch (err) {
-   console.log(err);
-  }
- }
-
- async function logout(id) {
-  try {
-   let res = await fetch(`http://localhost:3000/usuarios/${id}`);
-   let data = await res.json();
-   const usuarioLogged = {
-    ...data,
-    online: !data.online
-   };
-   await fetch(`http://localhost:3000/usuarios/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(usuarioLogged),
-    headers: {
-     "Content-Type": "application/json"
-    }
-   });
-   window.location.href = "/login";
-   localStorage.clear();
-  } catch (err) {
-   alert(err);
-  }
- }
-
- function gotoLogin() {
-  window.location.href = "/login";
- }
-
- function gotoRegister() {
-  window.location.href = "/cadastro-usuario";
- }
-
- function atualizarPerfil(form) {
-  if (form.senha === form.confirmar_senha) {
-   let id = JSON.parse(localStorage.getItem("userId"));
-   fetch(`http://localhost:3000/usuarios/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(form),
-    headers: {
-     "Content-Type": "application/json"
-    }
-   });
-   fetch("http://localhost:3000/exercicios")
-    .then((res) => res.json())
-    .then((data) => {
-     const exercicios = Array.isArray(data) ? data : [];
-     for (const exercicio of exercicios) {
-      if (exercicio.id_usuario === form.id) {
-       exercicio.nome_usuario = form.nome;
-       console.log(exercicio);
-       fetch(`http://localhost:3000/exercicios/${exercicio.id}`, {
-        method: "PUT",
-        body: JSON.stringify(exercicio),
+    try {
+      const res = await fetch(`${url}/usuarios`, {
+        method: "POST",
         headers: {
-         "Content-Type": "application/json"
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataForm),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        if (errorData.mensagem === "Email já cadastrado") {
+          setError("email", {
+            type: "manual",
+            message: errorData.mensagem,
+          });
         }
-       });
+        if (errorData.mensagem === "CPF já cadastrado") {
+          setError("cpf", {
+            type: "manual",
+            message: errorData.mensagem,
+          });
+        }
+        throw new Error(errorData.mensagem || "Erro na requisição");
       }
-     }
-    });
-   return;
-  }
-  if (form.senha !== form.confirmar_senha) {
-   alert("As senhas precisam ser iguais");
-   return;
-  }
- }
 
- function excluirUsuario(id) {
-  fetch("http://localhost:3000/exercicios")
-   .then((res) => res.json())
-   .then((data) => {
-    const locaisUsuario = data.filter((data) => data.id_usuario === id);
-    if (locaisUsuario.length > 0) {
-     alert(
-      "Não foi possível excluir o usuário, existe locais vinculados a ele"
-     );
-     return;
+      const data = await res.json();
+      console.log("Usuário cadastrado com sucesso:", data);
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error.message);
     }
-    if (confirm("Tem certeza que deseja excluir o usuário?")) {
-     fetch(`http://localhost:3000/usuarios/${id}`, {
-      method: "DELETE",
-      headers: {
-       "Content-Type": "application/json"
+  }
+
+  const onSubmitFormLogin = async (formLogin) => {
+    try {
+      const res = await fetch(`${url}/auth`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formLogin),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Erro ao fazer login");
       }
-     });
-     window.location.href = "/";
-     localStorage.clear();
+
+      const { token } = await res.json();
+      saveToken(token);
+      saveSession(decodeToken(token));
+      
+      return true;
+    } catch (error) {
+      console.error("Erro:", error.message);
     }
-   });
- }
+  };
 
- const options = [
-  {
-   label: "Masculino",
-   value: "Masculino"
-  },
-  {
-   label: "Feminino",
-   value: "Feminino"
-  },
-  {
-   label: "Outro",
-   value: "Outro"
+  const logout = async () => {
+    try{
+      clearSession();
+      return true;
+    } catch(error){
+      console.error("Erro ao logout:", error.message);
+    }
   }
- ];
+  
+  const options = [
+    { label: "Masculino", value: "masculino" },
+    { label: "Feminino", value: "feminino" },
+    { label: "Outro", value: "outro" },
+  ];
 
- return (
-  <UsuariosContext.Provider
-   value={{
-    usuarios,
-    loading,
-    isVisible,
-    setUsuarios,
-    onSubmitFormCadastro,
-    onSubmitFormLogin,
-    gotoLogin,
-    gotoRegister,
-    senhaError,
-    cpfError,
-    emailError,
-    options,
-    logout,
-    atualizarPerfil,
-    excluirUsuario
-   }}>
-   {children}
-  </UsuariosContext.Provider>
- );
+  return (
+    <UsuariosContext.Provider
+      value={{
+        onSubmitFormCadastro,
+        onSubmitFormLogin,
+        logout,
+        options
+      }}
+    >
+      {children}
+    </UsuariosContext.Provider>
+  );
 };
