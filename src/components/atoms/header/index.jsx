@@ -1,4 +1,5 @@
 import logo from "../../../assets/FitHubLogo.png";
+import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UsuariosContext } from "../../../context/UsuariosContext";
@@ -8,7 +9,7 @@ import styles from "./index.module.css";
 
 function Header() {
   const { logout } = useContext(UsuariosContext);
-  const tokenJWT = JSON.parse(localStorage.getItem("tokenJWT"));
+  const { tokenJWT } = useAuth();
 
   const logoutAccess = async () => {
     const success = await logout();
