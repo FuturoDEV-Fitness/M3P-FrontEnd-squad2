@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { toast } from 'react-toastify'
 
 import { CepContext } from "./CepContext";
 import { formatarCPF } from "../validation/registrationValidationSchema"
@@ -60,11 +61,10 @@ export const UsuariosContextProvider = ({ children }) => {
         }
         throw new Error(errorData.mensagem || "Erro na requisição");
       }
-
-      const data = await res.json();
-      console.log("Usuário cadastrado com sucesso:", data);
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error.message);
+      toast.success("Usuário cadastrado com sucesso!");
+      return true;
+    } catch  {
+      toast.error("Erro ao cadastrar usuário!");
     }
   }
 
@@ -86,10 +86,15 @@ export const UsuariosContextProvider = ({ children }) => {
       const { token } = await res.json();
       saveToken(token);
       saveSession(decodeToken(token));
-      
+
+      toast.success("Login efetuado com sucesso!");
       return true;
     } catch (error) {
-      console.error("Erro:", error.message);
+      if(error.message !== "E-mail ou senha incorreta") {
+      toast.error("Erro ao fazer login! Tente novamente mais tarde.");
+      return
+      }
+      toast.error(error.message);
     }
   };
 

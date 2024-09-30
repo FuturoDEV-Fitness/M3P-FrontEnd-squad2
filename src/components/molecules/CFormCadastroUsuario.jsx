@@ -29,12 +29,17 @@ function CFormCadastroUsuario() {
 
   const { buscarCep } = useContext(CepContext);
 
+  const handleSubmitForm = async (formCadastro) => {
+    const success = await onSubmitFormCadastro(formCadastro, setError);
+    if (success){
+      navigate("/login")
+    }
+  }
+
   return (
     <form
       className={stylesCadastro.formCadastro}
-      onSubmit={handleSubmit((formCadastro) =>
-        onSubmitFormCadastro(formCadastro, setError)
-      )}      
+      onSubmit={handleSubmit(handleSubmitForm)}      
     >
       <div className={stylesCadastro.textFields}>
         <CTextField
