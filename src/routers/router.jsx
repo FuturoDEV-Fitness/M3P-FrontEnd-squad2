@@ -1,5 +1,4 @@
 import { Navigate, createBrowserRouter, Outlet } from "react-router-dom";
-import { useMemo } from "react";
 import App from "../App";
 import Login from "../pages/login";
 import CadastroUsuario from "../pages/cadastroUsuario";
@@ -8,10 +7,9 @@ import Locais from "../pages/locais";
 import CadastroLocais from "../pages/cadastroLocais";
 
 // Componente PrivateRoute
+
 const PrivateRoute = () => {
-  const tokenJWT = useMemo(() => {
-    return JSON.parse(localStorage.getItem("tokenJWT"));
-  }, []);
+  const tokenJWT = localStorage.getItem("tokenJWT");
 
   return tokenJWT ? <Outlet /> : <Navigate to="/login" />;
 };

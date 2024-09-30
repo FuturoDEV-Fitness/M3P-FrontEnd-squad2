@@ -1,12 +1,22 @@
 import logo from "../../../assets/FitHubLogo.png";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UsuariosContext } from "../../../context/UsuariosContext";
 
 import CButton from "../CButton";
 import styles from "./index.module.css";
 
 function Header() {
+  const { logout } = useContext(UsuariosContext);
   const tokenJWT = JSON.parse(localStorage.getItem("tokenJWT"));
 
+  const logoutAccess = async () => {
+    const success = await logout();
+    if (success) {
+      window.location.href = "/";
+    }
+  };
+  
   return (
     <div className={styles.navContainer}>
       <nav className={styles.nav}>
@@ -16,12 +26,12 @@ function Header() {
         </div>
         {tokenJWT ? (
           <div className={styles.links}>
-            <Link to="/lista-exercicios">Meus Locais</Link>
-            <Link to="/cadastro-exercicios">Cadastrar Locais</Link>
+            <Link to="/locais-exercicios">Meus Locais</Link>
+            <Link to="/cadastro-locais">Cadastrar Locais</Link>
             <Link to="/perfil">Perfil</Link>
             <CButton
               onClick={() => {
-                logout(JSON.parse(localStorage.getItem("tokenJWT")));
+                logoutAccess();
               }}
               variant="outlined"
               sx={{
@@ -37,6 +47,8 @@ function Header() {
           <div className={styles.links}>
             <CButton
               variant="outlined"
+              component={Link}
+              to="/login"
               sx={{
                 color: "#EFF6E0",
                 borderColor: "#EFF6E0",
@@ -47,6 +59,8 @@ function Header() {
             </CButton>
             <CButton
               variant="outlined"
+              component={Link}
+              to="/cadastro-usuario"
               sx={{
                 color: "#EFF6E0",
                 borderColor: "#EFF6E0",

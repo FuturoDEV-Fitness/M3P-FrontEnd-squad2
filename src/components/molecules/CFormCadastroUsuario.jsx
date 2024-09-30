@@ -3,6 +3,7 @@ import CTextField from "../atoms/CTextField";
 import CButton from "../atoms/CButton";
 
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MenuItem } from "@mui/material";
 import { useContext } from "react";
@@ -11,6 +12,7 @@ import { CepContext } from "../../context/CepContext";
 import { validationSchemaCadastro } from "../../validation/registrationValidationSchema";
 
 function CFormCadastroUsuario() {
+  const navigate = useNavigate();
   const { onSubmitFormCadastro, options } =
     useContext(UsuariosContext);
 
@@ -189,7 +191,7 @@ function CFormCadastroUsuario() {
         Cadastrar
       </CButton>
       <CButton
-        onClick={() => gotoLogin()}
+        onClick={() => (navigate("/login"))}
         variant="outlined"
         sx={{
           color: "#01161e",

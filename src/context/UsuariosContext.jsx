@@ -1,17 +1,16 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 
 import { CepContext } from "./CepContext";
 import { formatarCPF } from "../validation/registrationValidationSchema"
+import useAuth from "../hooks/useAuth";
 
 export const UsuariosContext = createContext();
 let url = "http://localhost:3333/api";
 
-const [ session, setSession ] = useState({})
-
-
 export const UsuariosContextProvider = ({ children }) => {
 
   const { endereco } = useContext(CepContext);
+  const { saveToken, saveSession, decodeToken, clearSession } = useAuth()
 
   async function onSubmitFormCadastro(formCadastro, setError) {
     const cpfFormatado = formatarCPF(formCadastro.cpf);
@@ -69,7 +68,7 @@ export const UsuariosContextProvider = ({ children }) => {
     }
   }
 
-  async function onSubmitFormLogin(formLogin) {
+  const onSubmitFormLogin = async (formLogin) => {
     try {
       const res = await fetch(`${url}/auth`, {
         method: "POST",
@@ -78,22 +77,30 @@ export const UsuariosContextProvider = ({ children }) => {
         },
         body: JSON.stringify(formLogin),
       });
-  
-      // Verifique se a resposta foi bem-sucedida
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || "Erro ao fazer login");
       }
-  
-      // Se a resposta foi bem-sucedida, processe os dados
-      const {token} = await res.json();
-      localStorage.setItem("tokenJWT", JSON.stringify({token}));
-      window.location.href = "/";
+
+      const { token } = await res.json();
+      saveToken(token);
+      saveSession(decodeToken(token));
+      
+      return true;
     } catch (error) {
-      console.error("Erro:", error.message); // Mostra a mensagem de erro
+      console.error("Erro:", error.message);
+    }
+  };
+
+  const logout = async () => {
+    try{
+      clearSession();
+      return true;
+    } catch(error){
+      console.error("Erro ao logout:", error.message);
     }
   }
-  
   
   const options = [
     { label: "Masculino", value: "masculino" },
@@ -106,7 +113,8 @@ export const UsuariosContextProvider = ({ children }) => {
       value={{
         onSubmitFormCadastro,
         onSubmitFormLogin,
-        options,
+        logout,
+        options
       }}
     >
       {children}

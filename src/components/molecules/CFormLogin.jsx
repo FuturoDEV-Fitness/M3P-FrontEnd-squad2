@@ -2,7 +2,7 @@ import CTextField from "../atoms/CTextField";
 import CButton from "../atoms/CButton";
 import styles from "../../pages/pagesCSS/Login.module.css";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
@@ -19,9 +19,14 @@ function CFormLogin() {
   } = useForm({
     resolver: yupResolver(validationSchemaLogin),
   });
-
-  const onSubmit = (formData) => {
-    onSubmitFormLogin(formData);
+  
+  const navigate = useNavigate();
+  
+  const onSubmit = async (formData) => {
+    const success = await onSubmitFormLogin(formData);
+    if (success) {
+      navigate("/"); 
+    };
   };
 
   return (
@@ -66,6 +71,8 @@ function CFormLogin() {
       <CButton
         className={styles.link}
         variant="outlined"
+        component={Link}
+        to={"/cadastro-usuario"}
         sx={{
           color: "#01161e",
           borderColor: "#01161e",
