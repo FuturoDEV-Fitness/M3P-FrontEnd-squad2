@@ -3,6 +3,8 @@ import { toast } from 'react-toastify'
 
 import { CepContext } from "./CepContext";
 import { formatarCPF } from "../validation/registrationValidationSchema"
+import { formatarCEP } from "../validation/registrationValidationSchema";
+import { formatarData } from "../validation/registrationValidationSchema";
 import useAuth from "../hooks/useAuth";
 
 export const UsuariosContext = createContext();
@@ -14,25 +16,21 @@ export const UsuariosContextProvider = ({ children }) => {
   const { saveToken, saveSession, decodeToken, clearSession } = useAuth()
 
   async function onSubmitFormCadastro(formCadastro, setError) {
-    const cpfFormatado = formatarCPF(formCadastro.cpf);
     const dataForm = {
       nome: formCadastro.nome,
       email: formCadastro.email,
       password: formCadastro.password,
-      confirmar_senha: formCadastro.confirmar_password,
-      cpf: cpfFormatado,
+      cpf: formatarCPF(formCadastro.cpf),
       sexo: formCadastro.sexo,
-      data_nascimento: formCadastro.data_nascimento,
+      data_nascimento: formatarData(formCadastro.data_nascimento),
       endereco: {
-        rua: endereco.address,
+        logradouro: endereco.address,
         numero: formCadastro.endereco_numero,
-        complemento: formCadastro.complemento || "",
-        cidade: endereco.city,
         bairro: endereco.district,
+        cidade: endereco.city,
         estado: endereco.state,
-        cep: formCadastro.cep,
-        latitude: endereco.lat,
-        longitude: endereco.lng,
+        cep: formatarCEP(formCadastro.cep),
+        complemento: formCadastro.complemento || ""
       },
     };
 
@@ -63,7 +61,8 @@ export const UsuariosContextProvider = ({ children }) => {
       }
       toast.success("Usuário cadastrado com sucesso!");
       return true;
-    } catch  {
+    } catch (error) {
+      console.error(error);
       toast.error("Erro ao cadastrar usuário!");
     }
   }
