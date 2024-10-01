@@ -9,6 +9,20 @@ export const formatarCPF = (cpf) => {
         .replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Adiciona o hífen
 };
 
+// Função para formatar o CEP
+export const formatarCEP = (cep) => {
+    return cep
+        .replace(/\D/g, "") // Remove caracteres não numéricos
+        .replace(/(\d{5})(\d)/, "$1-$2"); // Adiciona o hífen
+}
+
+// Função para formatar a data de AAAA/MM/DD para DD/MM/AAAA
+export const formatarData = (data) => {
+    const [ano, mes, dia] = data.split('-'); // Separar a data original por '-'
+    // Retornar no formato DD/MM/AAAA
+    return `${dia}/${mes}/${ano}`;
+};
+
 export const validationSchemaCadastro = Yup.object().shape({
     nome: Yup.string()
         .required("Nome de usuário obrigatório")
