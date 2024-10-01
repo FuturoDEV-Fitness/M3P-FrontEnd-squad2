@@ -14,28 +14,14 @@
     gap: 1.5rem;
 }
 
-.formCadastro button {
-    width: 60%;
-    margin-top: 0.5rem;
-}
-
-.error {
-    color: red;
-    font-size: 10px;
-    width: 100%;
-}
-
-.errorDuplo {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    color: red;
-    font-size: 10px;
-}
-
 .textFieldsCep {
     display: grid;
     grid-template-columns: 3fr 2fr 0.5fr;
     gap: 1rem;
     width: 100%;
+}
+
+.formCadastro button {
+    width: 60%;
+    margin-top: 0.5rem;
 }

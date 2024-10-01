@@ -1,15 +1,15 @@
-import stylesCadastro from "../../pages/pagesCSS/CadastroUsuario.module.css";
-import CTextField from "../atoms/CTextField";
-import CButton from "../atoms/CButton";
+import stylesCadastro from "./styles.module.css";
+import CTextField from "../../atoms/CTextField";
+import CButton from "../../atoms/CButton";
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MenuItem } from "@mui/material";
 import { useContext } from "react";
-import { UsuariosContext } from "../../context/UsuariosContext";
-import { CepContext } from "../../context/CepContext";
-import { validationSchemaCadastro } from "../../validation/registrationValidationSchema";
+import { UsuariosContext } from "../../../context/UsuariosContext";
+import { CepContext } from "../../../context/CepContext";
+import { validationSchemaCadastro } from "../../../validation/registrationValidationSchema";
 
 function CFormCadastroUsuario() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
-import styles from "../../pages/pagesCSS/Login.module.css";
-import CFormCadastroUsuarioContainer from "../organisms/CFomrCadastroUsuarioContainer";
+import styles from "./styles.module.css";
+import CFormCadastroUsuarioContainer from "../../organisms/CFormCadastroUsuarioContainer";
 
 function CTemplateCadastroUsuario() {
  return (

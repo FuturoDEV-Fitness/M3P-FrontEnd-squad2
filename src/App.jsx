@@ -5,7 +5,6 @@ import { ExerciciosContext } from "./context/ExercicioContext";
 import Header from "./components/atoms/header";
 import Footer from "./components/atoms/footer";
 import Loading from "./components/atoms/Loading";
-import "./App.css";
 
 function App() {
   return (

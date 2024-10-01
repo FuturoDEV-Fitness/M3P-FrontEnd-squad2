@@ -1,5 +1,5 @@
-import styles from "../../pages/pagesCSS/Login.module.css";
-import CFormLoginContainer from "../organisms/CFormLoginContainer";
+import styles from "./styles.module.css";
+import CFormLoginContainer from "../../organisms/CFormLoginContainer";
 function CTemplateLogin() {
  return (
   <div className={styles.container}>

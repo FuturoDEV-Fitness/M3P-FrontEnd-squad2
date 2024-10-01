@@ -1,6 +1,7 @@
-import styles from "../../pages/pagesCSS/Login.module.css";
-import CFitHubLogo from "../atoms/CFitHubLogo";
-import CFormCadastroUsuario from "../molecules/CFormCadastroUsuario";
+// import styles from "../../../pages/pagesCSS/Login.module.css";
+import styles from "./styles.module.css";
+import CFitHubLogo from "../../atoms/CFitHubLogo";
+import CFormCadastroUsuario from "../../molecules/CFormCadastroUsuario";
 
 function CFormCadastroUsuarioContainer() {
  return (

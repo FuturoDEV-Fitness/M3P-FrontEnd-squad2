@@ -1,0 +1,38 @@
+.container {
+    width: 100vw;
+    height: auto;
+    background-color: #EFF6E0;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.div_cards {
+    background-color: #01161E;
+    width: 100vw;
+    padding: 0 5rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    width: 100%;
+    padding: 2rem 0;
+    color: #EFF6E0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+    .title {
+        flex-direction: column;
+        font-size: 12px;
+        padding-bottom: 2rem;
+    }
+}

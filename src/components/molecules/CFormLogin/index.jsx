@@ -1,13 +1,13 @@
-import CTextField from "../atoms/CTextField";
-import CButton from "../atoms/CButton";
-import styles from "../../pages/pagesCSS/Login.module.css";
+import CTextField from "../../atoms/CTextField";
+import CButton from "../../atoms/CButton";
+import styles from "./styles.module.css";
 
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
-import { UsuariosContext } from "../../context/UsuariosContext";
-import { validationSchemaLogin } from "../../validation/loginValidationSchema";
+import { UsuariosContext } from "../../../context/UsuariosContext";
+import { validationSchemaLogin } from "../../../validation/loginValidationSchema";
 
 function CFormLogin() {
   const { onSubmitFormLogin } = useContext(UsuariosContext);
