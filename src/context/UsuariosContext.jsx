@@ -89,7 +89,11 @@ export const UsuariosContextProvider = ({ children }) => {
       toast.success("Login efetuado com sucesso!");
       return true;
     } catch (error) {
-      if(error.message !== "E-mail ou senha incorreta") {
+      if(error.message === "Usuário não encontrado"){
+        toast.error("E-mail ou senha incorreta");
+        return
+      }
+      if(error.message !== "E-mail ou senha incorreta" ) {
       toast.error("Erro ao fazer login! Tente novamente mais tarde.");
       return
       }

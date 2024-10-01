@@ -6,7 +6,7 @@ function CWelcome() {
   return (
     <div className={styles.welcome}>
       <h1 style={{ fontWeight: "inherit" }}>
-        Olá {session && session.id}!
+        Olá {session && session.user_name}!
       </h1>
       <h2 style={{ fontWeight: "inherit" }}>
         Seja bem-vindo(a) ao <span style={{ fontWeight: "bold" }}>FitHub!</span>
