@@ -1,6 +1,6 @@
-import styles from "../../pages/pagesCSS/Dashboard.module.css";
+import styles from "./styles.module.css";
 import { useContext } from "react";
-import { ExerciciosContext } from "../../context/ExercicioContext";
+import { ExerciciosContext } from "../../../context/ExercicioContext";
 import { useRef, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";

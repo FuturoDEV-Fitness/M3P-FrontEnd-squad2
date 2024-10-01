@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { UsuariosContext } from "../../../context/UsuariosContext";
 
 import CButton from "../CButton";
-import styles from "./index.module.css";
+import styles from "./styles.module.css";
 
 function Header() {
   const { logout } = useContext(UsuariosContext);

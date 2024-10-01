@@ -1,7 +1,7 @@
-import styles from "../../pages/pagesCSS/Dashboard.module.css";
-import Map from "../atoms/Map";
+import styles from "./styles.module.css";
+import Map from "../../atoms/Map";
 import { useContext } from "react";
-import { ExerciciosContext } from "../../context/ExercicioContext";
+import { ExerciciosContext } from "../../../context/ExercicioContext";
 
 function CMapaContainer(props) {
  const { positionMarker } = useContext(ExerciciosContext);

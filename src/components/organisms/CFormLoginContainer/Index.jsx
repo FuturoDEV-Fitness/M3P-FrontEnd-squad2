@@ -1,6 +1,6 @@
-import CFormLogin from "../molecules/CFormLogin";
-import styles from "../../pages/pagesCSS/Login.module.css";
-import CFitHubLogo from "../atoms/CFitHubLogo";
+import styles from "./styles.module.css";
+import CFormLogin from "../../molecules/CFormLogin";
+import CFitHubLogo from "../../atoms/CFitHubLogo";
 
 function CFormLoginContainer() {
     return (

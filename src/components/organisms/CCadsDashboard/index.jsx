@@ -1,8 +1,8 @@
 import { Card } from "@mui/material";
-import styles from "../../pages/pagesCSS/Dashboard.module.css";
+import styles from "./styles.module.css";
 import { useContext } from "react";
-import { ExerciciosContext } from "../../context/ExercicioContext";
-import Map from "../atoms/Map";
+import { ExerciciosContext } from "../../../context/ExercicioContext";
+import Map from "../../atoms/Map";
 
 function CCardsDashboard() {
  const { exercicios } = useContext(ExerciciosContext);

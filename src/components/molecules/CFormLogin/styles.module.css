@@ -1,0 +1,15 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.inputContainer {
+    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.link button {
+    width: 100%;
+}

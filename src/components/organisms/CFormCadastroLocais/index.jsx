@@ -1,12 +1,12 @@
 import { MenuItem } from "@mui/material";
-import CButton from "../atoms/CButton";
-import CTextField from "../atoms/CTextField";
-import styles from "../../pages/pagesCSS/CadastroLocais.module.css";
+import CButton from "../../atoms/CButton";
+import CTextField from "../../atoms/CTextField";
+import styles from "./styles.module.css";
 
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
 // import { ExerciciosContext } from "../../context/ExercicioContext";
-import { CepContext } from "../../context/CepContext";
+import { CepContext } from "../../../context/CepContext";
 function CFormCadastroLocais() {
  const tipos = [
   "Caminhada",

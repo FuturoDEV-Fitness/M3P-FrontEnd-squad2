@@ -1,5 +1,5 @@
-import styles from "../../pages/pagesCSS/Dashboard.module.css";
-import useAuth from "../../hooks/useAuth";
+import styles from "./styles.module.css";
+import useAuth from "../../../hooks/useAuth";
 
 function CWelcome() {
   const { session } = useAuth();

@@ -1,4 +1,4 @@
-import CTemplateCadastroUsuario from "../../components/templates/CTemplateCadastroUsuario";
+import CTemplateCadastroUsuario from "../../components/templates/CTemplateCadastroUsuarios";
 
 
 function CadastroUsuario() {

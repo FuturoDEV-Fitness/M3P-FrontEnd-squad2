@@ -1,5 +1,5 @@
-import styles from "../../pages/pagesCSS/CadastroLocais.module.css";
-import CFormCadastroLocais from "../organisms/CFormCadastroLocais";
+import styles from "./styles.module.css";
+import CFormCadastroLocais from "../../organisms/CFormCadastroLocais";
 function CTemplateCadastroLocais() {
  return (
   <div className={styles.container} style={{ height: "80vh" || auto }}>
