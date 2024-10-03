@@ -1,0 +1,39 @@
+.perfil {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+}
+
+.divPerfil {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+@media (max-width: 800px) {
+    .perfil {
+        width: 90%;
+    }
+
+    .inputs {
+        gap: 0.5rem;
+    }
+}
+
+@media ((min-width: 801px) and (max-width: 1200px)) {
+    .perfil {
+        width: 90%;
+    }
+}

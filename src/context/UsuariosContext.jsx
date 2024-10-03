@@ -1,19 +1,34 @@
-import { createContext, useContext } from "react";
-import { toast } from 'react-toastify'
+import { createContext, useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 import { CepContext } from "./CepContext";
-import { formatarCPF } from "../validation/registrationValidationSchema"
-import { formatarCEP } from "../validation/registrationValidationSchema";
-import { formatarData } from "../validation/registrationValidationSchema";
+import {
+  formatarCPF,
+  formatarCEP,
+  formatarData,
+} from "../validation/registrationValidationSchema";
+import {
+  limparCPF,
+  limparCEP,
+  limparData,
+} from "../validation/perfilValidationSchema";
 import useAuth from "../hooks/useAuth";
 
 export const UsuariosContext = createContext();
 let url = "http://localhost:3333/api";
 
 export const UsuariosContextProvider = ({ children }) => {
-
   const { endereco } = useContext(CepContext);
-  const { saveToken, saveSession, decodeToken, clearSession } = useAuth()
+  const {
+    saveToken,
+    saveSession,
+    decodeToken,
+    clearSession,
+    session,
+    tokenJWT,
+  } = useAuth();
+
+  const [user, setUser] = useState({});
 
   async function onSubmitFormCadastro(formCadastro, setError) {
     const dataForm = {
@@ -30,7 +45,7 @@ export const UsuariosContextProvider = ({ children }) => {
         cidade: endereco.city,
         estado: endereco.state,
         cep: formatarCEP(formCadastro.cep),
-        complemento: formCadastro.complemento || ""
+        complemento: formCadastro.complemento || "",
       },
     };
 
@@ -89,27 +104,66 @@ export const UsuariosContextProvider = ({ children }) => {
       toast.success("Login efetuado com sucesso!");
       return true;
     } catch (error) {
-      if(error.message === "Usuário não encontrado"){
+      if (error.message === "Usuário não encontrado") {
         toast.error("E-mail ou senha incorreta");
-        return
+        return;
       }
-      if(error.message !== "E-mail ou senha incorreta" ) {
-      toast.error("Erro ao fazer login! Tente novamente mais tarde.");
-      return
+      if (error.message !== "E-mail ou senha incorreta") {
+        toast.error("Erro ao fazer login! Tente novamente mais tarde.");
+        return;
       }
       toast.error(error.message);
     }
   };
 
   const logout = async () => {
-    try{
+    try {
       clearSession();
       return true;
-    } catch(error){
+    } catch (error) {
       console.error("Erro ao logout:", error.message);
     }
-  }
-  
+  };
+
+  const getUser = async () => {
+    try {
+      if (!session?.id) {
+        return setUser({});
+      }
+
+      const res = await fetch(`${url}/usuarios/${session.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenJWT}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+
+      const data = await res.json();
+      const userData = {
+        ...data,
+        cpf: data.cpf ? limparCPF(data.cpf) : "", // Valida se o CPF existe antes de limpar
+        data_nascimento: data.data_nascimento
+          ? limparData(data.data_nascimento)
+          : "", // Valida se a data de nascimento existe
+        endereco: {
+          ...data.endereco, // Mantém o restante do objeto endereco
+          cep: data.endereco && data.endereco.cep ? limparCEP(data.endereco.cep) : "", // Valida se o endereço e o CEP existem
+        },
+      };
+      
+
+      return setUser(userData);
+    } catch (error) {
+      console.error("Erro ao buscar usuário:", error.message);
+    }
+  };
+
   const options = [
     { label: "Masculino", value: "masculino" },
     { label: "Feminino", value: "feminino" },
@@ -122,7 +176,9 @@ export const UsuariosContextProvider = ({ children }) => {
         onSubmitFormCadastro,
         onSubmitFormLogin,
         logout,
-        options
+        getUser,
+        user,
+        options,
       }}
     >
       {children}
