@@ -44,7 +44,7 @@ export const ExerciciosContextProvider = ({ children }) => {
         console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
 
         try {
-            const res = await fetch(`${API_URL_BACK}/${userId}`, {
+            const res = await fetch(`${API_URL_BACK}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
