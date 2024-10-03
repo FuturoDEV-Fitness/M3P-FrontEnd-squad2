@@ -6,6 +6,7 @@ import CadastroUsuario from "../pages/cadastroUsuario";
 import Dashboard from "../pages/dashboard";
 import Locais from "../pages/locais";
 import CadastroLocais from "../pages/cadastroLocais";
+import Perfil from "../pages/perfil";
 
 // Componente PrivateRoute
 const PrivateRoute = () => {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
             path: "/cadastro-locais",
             element: <CadastroLocais />,
           },
+          {
+            path: "/perfil",
+            element: <Perfil />
+          }
         ],
       },
     ],

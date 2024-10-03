@@ -14,7 +14,7 @@ function useFetch(url, options) {
       })
       .catch((error) => {
         alert("Ocorreu um erro ao carregar os dados: ");
-        window.location.href = "/login"; 
+        window.location.href = "/"; 
       })
       .finally(() => {
         setTimeout(() => setLoading(false), 1000);
