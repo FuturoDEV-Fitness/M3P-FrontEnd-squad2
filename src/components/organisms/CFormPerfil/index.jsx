@@ -16,7 +16,7 @@ function CFormPerfil() {
 
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const { getUser, updateUser, user, options } = useContext(UsuariosContext);
+  const { getUser, updateUser, deleteUser, user, options } = useContext(UsuariosContext);
   const { tokenJWT } = useAuth();
 
   useEffect(() => {
@@ -38,6 +38,7 @@ function CFormPerfil() {
   } = useForm({
     resolver: yupResolver(validationSchemaPerfil),
   });
+
   return (
     <form
       onSubmit={handleSubmit((form) => updateUser(form, setError))}
@@ -296,7 +297,7 @@ function CFormPerfil() {
 
             <CButton
               variant="outlined"
-              onClick={() => excluirUsuario(user.id)}
+              onClick={() => deleteUser(user.id)}
               sx={{
                 color: "#990000",
                 borderColor: "#990000",
