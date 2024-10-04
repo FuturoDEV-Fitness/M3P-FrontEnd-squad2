@@ -128,6 +128,20 @@ export const UsuariosContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
+      const res = await fetch(`${url}/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenJWT}`,
+        },
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+
+      toast.success("Logout efetuado com sucesso!");
       clearSession();
       return true;
     } catch (error) {
