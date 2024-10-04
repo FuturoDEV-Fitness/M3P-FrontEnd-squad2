@@ -152,11 +152,13 @@ export const UsuariosContextProvider = ({ children }) => {
           ? limparData(data.data_nascimento)
           : "",
         endereco: {
-          ...data.endereco, 
-          cep: data.endereco && data.endereco.cep ? limparCEP(data.endereco.cep) : "",
+          ...data.endereco,
+          cep:
+            data.endereco && data.endereco.cep
+              ? limparCEP(data.endereco.cep)
+              : "",
         },
       };
-      
 
       return setUser(userData);
     } catch (error) {
@@ -167,14 +169,14 @@ export const UsuariosContextProvider = ({ children }) => {
   const updateUser = async (form, setError) => {
     const dataUser = {
       ...form,
-      cpf : formatarCPF(form.cpf),
-      data_nascimento : formatarData(form.data_nascimento),
-      endereco : {
+      cpf: formatarCPF(form.cpf),
+      data_nascimento: formatarData(form.data_nascimento),
+      endereco: {
         ...form.endereco,
-        cep : formatarCEP(form.endereco.cep),
-      }
-    }
-    try{
+        cep: formatarCEP(form.endereco.cep),
+      },
+    };
+    try {
       const res = await fetch(`${url}/usuarios/${session.id}`, {
         method: "PUT",
         headers: {
@@ -200,16 +202,38 @@ export const UsuariosContextProvider = ({ children }) => {
             message: errorData.mensagem,
           });
         }
-        throw new Error
+        throw new Error();
       }
 
-
       toast.success("Usuário atualizado com sucesso!");
-      return 
+      return;
     } catch {
       toast.error("Erro ao atualizar usuário!");
-    } 
-  }
+    }
+  };
+
+  const deleteUser = async (user_id) => {
+    try {
+      const res = await fetch(`${url}/usuarios/${user_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenJWT}`,
+        },
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+
+      await clearSession();
+      toast.success("Usuário excluído com sucesso!");
+      window.location.href = "/";
+      return;
+    } catch {
+      toast.error("Erro ao excluir usuário!");
+    }
+  };
 
   const options = [
     { label: "Masculino", value: "masculino" },
@@ -225,6 +249,7 @@ export const UsuariosContextProvider = ({ children }) => {
         logout,
         getUser,
         updateUser,
+        deleteUser,
         user,
         options,
       }}
