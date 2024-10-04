@@ -13,7 +13,7 @@ export const ExerciciosContextProvider = ({ children }) => {
     const [data, setData] = useState([]);
     const [locaisUsuario, setLocaisUsuario] = useState([]);
     const [positionMarker, setPositionMarker] = useState([]);
-    
+
 
 
     //const { data, loading, isVisible } = useFetch(API_URL_BACK);
@@ -26,8 +26,26 @@ export const ExerciciosContextProvider = ({ children }) => {
     //const locaisUsuario = data?.filter((exercicio) => exercicio.user_id === usuarioId) || [];
     //const positionMarker = data?.map(({ latitude, longitude }) => ({ latitude, longitude })) || [];
 
+    function tranformarDadosEnvio(dados) {
+        return {
+            nome: dados.nome,
+            pratica_esportiva: dados.tipo,
+            descricao: dados.descricao,
+            endereco: {
+                logradouro: dados.endereco,
+                numero: dados.numero,
+                //bairro: dados.district,
+                cidade: dados.cidade,
+                estado: dados.estado,
+                latitude: dados.latitude,
+                longitude: dados.longitude,
+                cep: formatarCEP(dados.cep),
+                complemento: dados.complemento || ""
+            }
+        }
+    }
 
-    
+
     async function LerLocaisCadastrados() {
         try {
             const res = await fetch(`${API_URL_BACK}`, {
@@ -80,22 +98,7 @@ export const ExerciciosContextProvider = ({ children }) => {
     async function cadastrarNovoLocal(formCadastro, setError) {
         const token = localStorage.getItem('tokenJWT');
 
-        const dataForm = {
-            nome: formCadastro.nome,
-            pratica_esportiva: formCadastro.tipo,
-            descricao: formCadastro.descricao,
-            endereco: {
-                logradouro: formCadastro.endereco,
-                numero: formCadastro.numero,
-                //bairro: formCadastro.district,
-                cidade: formCadastro.cidade,
-                estado: formCadastro.estado,
-                latitude: formCadastro.latitude,
-                longitude: formCadastro.longitude,
-                cep: formatarCEP(formCadastro.cep),
-                complemento: formCadastro.complemento || ""
-            },
-        };
+        const dataForm = tranformarDadosEnvio(formCadastro)
 
         console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
 
@@ -123,6 +126,40 @@ export const ExerciciosContextProvider = ({ children }) => {
         }
     }
 
+
+    async function atualizarLocais(formRecadastro) {
+        const token = localStorage.getItem('tokenJWT');
+        const dataForm = tranformarDadosEnvio(formRecadastro)
+
+        console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
+
+        try {
+            const res = await fetch(`${API_URL_BACK}/${formRecadastro.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(dataForm),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                console.log(errorData)
+                throw new Error(errorData.mensagem || "Erro na requisição");
+            }
+            LerLocaisCadastrados()
+            toast.success("Local de exercício atualizado com sucesso!");
+            return true;
+        } catch (error) {
+            console.error(error);
+            toast.error("Erro ao atualizar seu local de exercício!");
+        }
+    }
+
+
+    
+
     return (
         <ExerciciosContext.Provider
             value={{
@@ -131,7 +168,8 @@ export const ExerciciosContextProvider = ({ children }) => {
                 //loading,
                 locaisUsuario,
                 positionMarker,
-                cadastrarNovoLocal
+                cadastrarNovoLocal,
+                atualizarLocais
             }}>
             {children}
         </ExerciciosContext.Provider>
