@@ -10,13 +10,50 @@ export const ExerciciosContextProvider = ({ children }) => {
     const API_URL_BACK = "http://localhost:3333/api/locais";
     const API_URL = "http://localhost:3000/exercicios";
 
-    const { data, loading, isVisible } = useFetch(API_URL);
+    const [locais, setLocais] = useState([]);
+    const [positionMarker, setPositionMarker] = useState([]);
+
+
+    const { data, loading, isVisible } = useFetch(API_URL_BACK);
     const usuarioId = JSON.parse(localStorage.getItem("userId"));
 
 
 
-    const locaisUsuario = data?.filter((exercicio) => exercicio.id_usuario === usuarioId) || [];
-    const positionMarker = data?.map(({ latitude, longitude }) => ({ latitude, longitude })) || [];
+    const locaisUsuario = data?.filter((exercicio) => exercicio.user_id === usuarioId) || [];
+    //const positionMarker = data?.map(({ latitude, longitude }) => ({ latitude, longitude })) || [];
+
+
+    useEffect(() => {
+        if (data) {
+            const locaisConvertidos = data.map(local => ({
+                id: local.id,
+                nome: local.nome || "",
+                tipo: local.pratica_esportiva || "",
+                descricao: local.descricao || "",
+                cep: local.endereco?.cep || "",
+                endereco: local.endereco?.logradouro || "",
+                cidade: local.endereco?.cidade || "",
+                complemento: local.endereco?.complemento || "",
+                estado: local.endereco?.estado || "",
+                numero: local.endereco?.numero || "",
+                latitude: parseFloat(local.endereco?.latitude) || 0,
+                longitude: parseFloat(local.endereco?.longitude) || 0
+            }));
+
+            setPositionMarker(() => {
+                return locaisConvertidos.map((exercicio) => {
+                    return {
+                        latitude: exercicio.latitude,
+                        longitude: exercicio.longitude
+                    };
+                });
+            });
+
+            // Use 'locaisConvertidos' conforme necessário
+            console.log(locaisConvertidos);
+            setLocais(locaisConvertidos)
+        }
+    }, [data]);
 
 
     async function cadastrarNovoLocal(formCadastro, setError) {
@@ -69,7 +106,7 @@ export const ExerciciosContextProvider = ({ children }) => {
     return (
         <ExerciciosContext.Provider
             value={{
-                exercicios: data || [],
+                exercicios: locais || [],
                 isVisible,
                 loading,
                 locaisUsuario,
