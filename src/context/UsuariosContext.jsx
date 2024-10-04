@@ -29,8 +29,10 @@ export const UsuariosContextProvider = ({ children }) => {
   } = useAuth();
 
   const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(false);
 
   async function onSubmitFormCadastro(formCadastro, setError) {
+    setLoading(true);
     const dataForm = {
       nome: formCadastro.nome,
       email: formCadastro.email,
@@ -74,15 +76,18 @@ export const UsuariosContextProvider = ({ children }) => {
         }
         throw new Error(errorData.mensagem || "Erro na requisição");
       }
+      setLoading(false)
       toast.success("Usuário cadastrado com sucesso!");
       return true;
     } catch (error) {
       console.error(error);
       toast.error("Erro ao cadastrar usuário!");
+      setLoading(false)
     }
   }
 
   const onSubmitFormLogin = async (formLogin) => {
+    setLoading(true);
     try {
       const res = await fetch(`${url}/auth`, {
         method: "POST",
@@ -101,17 +106,21 @@ export const UsuariosContextProvider = ({ children }) => {
       saveToken(token);
       saveSession(decodeToken(token));
 
+      setLoading(false);
       toast.success("Login efetuado com sucesso!");
       return true;
     } catch (error) {
       if (error.message === "Usuário não encontrado") {
         toast.error("E-mail ou senha incorreta");
+        setLoading(false)
         return;
       }
       if (error.message !== "E-mail ou senha incorreta") {
         toast.error("Erro ao fazer login! Tente novamente mais tarde.");
+        setLoading(false)
         return;
       }
+      setLoading(false)
       toast.error(error.message);
     }
   };
@@ -167,6 +176,7 @@ export const UsuariosContextProvider = ({ children }) => {
   };
 
   const updateUser = async (form, setError) => {
+    setLoading(true)
     const dataUser = {
       ...form,
       cpf: formatarCPF(form.cpf),
@@ -188,7 +198,6 @@ export const UsuariosContextProvider = ({ children }) => {
 
       if (!res.ok) {
         const errorData = await res.json();
-
         if (errorData.mensagem === "Email já cadastrado por outro usuário") {
           setError("email", {
             type: "manual",
@@ -204,10 +213,11 @@ export const UsuariosContextProvider = ({ children }) => {
         }
         throw new Error();
       }
-
+      setLoading(false)
       toast.success("Usuário atualizado com sucesso!");
       return;
     } catch {
+      setLoading(false)
       toast.error("Erro ao atualizar usuário!");
     }
   };
@@ -252,6 +262,7 @@ export const UsuariosContextProvider = ({ children }) => {
         deleteUser,
         user,
         options,
+        loading
       }}
     >
       {children}

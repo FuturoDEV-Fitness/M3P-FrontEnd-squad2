@@ -1,6 +1,7 @@
 import CTextField from "../../atoms/CTextField";
 import CButton from "../../atoms/CButton";
 import styles from "./styles.module.css";
+import LoadingReq from "../../atoms/loadingReq";
 
 import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,7 +11,7 @@ import { UsuariosContext } from "../../../context/UsuariosContext";
 import { validationSchemaLogin } from "../../../validation/loginValidationSchema";
 
 function CFormLogin() {
-  const { onSubmitFormLogin } = useContext(UsuariosContext);
+  const { onSubmitFormLogin, loading } = useContext(UsuariosContext);
 
   const {
     handleSubmit,
@@ -28,6 +29,10 @@ function CFormLogin() {
       navigate("/"); 
     };
   };
+
+  if (loading) {
+    return <LoadingReq />;
+  }
 
   return (
     <form
