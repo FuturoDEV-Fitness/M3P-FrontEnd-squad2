@@ -2,6 +2,7 @@ import styles from "./styles.module.css";
 import CTextField from "../../atoms/CTextField";
 import CButton from "../../atoms/CButton";
 import Loading from "../../atoms/Loading";
+import LoadingReq from "../../atoms/loadingReq";
 import { MenuItem } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { UsuariosContext } from "../../../context/UsuariosContext";
@@ -16,16 +17,8 @@ function CFormPerfil() {
 
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const { getUser, updateUser, deleteUser, user, options } = useContext(UsuariosContext);
+  const { getUser, updateUser, deleteUser, user, options, loading } = useContext(UsuariosContext);
   const { tokenJWT } = useAuth();
-
-  useEffect(() => {
-    getUser();
-  }, [tokenJWT]);
-
-  if (!user) {
-    return <Loading />;
-  }
 
   const {
     register,
@@ -38,6 +31,18 @@ function CFormPerfil() {
   } = useForm({
     resolver: yupResolver(validationSchemaPerfil),
   });
+
+  useEffect(() => {
+    getUser();
+  }, [tokenJWT]);
+
+  if (!user) {
+    return <Loading />;
+  }
+
+  if(loading) {
+    return <LoadingReq />
+  }
 
   return (
     <form

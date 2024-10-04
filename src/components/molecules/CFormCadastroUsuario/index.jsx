@@ -1,6 +1,7 @@
 import stylesCadastro from "./styles.module.css";
 import CTextField from "../../atoms/CTextField";
 import CButton from "../../atoms/CButton";
+import LoadingReq from "../../atoms/loadingReq";
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,7 @@ import { validationSchemaCadastro } from "../../../validation/registrationValida
 
 function CFormCadastroUsuario() {
   const navigate = useNavigate();
-  const { onSubmitFormCadastro, options } =
+  const { onSubmitFormCadastro, options, loading } =
     useContext(UsuariosContext);
 
   const {
@@ -31,15 +32,19 @@ function CFormCadastroUsuario() {
 
   const handleSubmitForm = async (formCadastro) => {
     const success = await onSubmitFormCadastro(formCadastro, setError);
-    if (success){
-      navigate("/login")
+    if (success) {
+      navigate("/login");
     }
+  };
+
+  if (loading) {
+    return <LoadingReq />;
   }
 
   return (
     <form
       className={stylesCadastro.formCadastro}
-      onSubmit={handleSubmit(handleSubmitForm)}      
+      onSubmit={handleSubmit(handleSubmitForm)}
     >
       <div className={stylesCadastro.textFields}>
         <CTextField
@@ -196,7 +201,7 @@ function CFormCadastroUsuario() {
         Cadastrar
       </CButton>
       <CButton
-        onClick={() => (navigate("/login"))}
+        onClick={() => navigate("/login")}
         variant="outlined"
         sx={{
           color: "#01161e",
