@@ -34,7 +34,7 @@ export const ExerciciosContextProvider = ({ children }) => {
                 nome: local.nome || "",
                 tipo: local.pratica_esportiva || "",
                 descricao: local.descricao || "",
-                cep: local.endereco?.cep || "",
+                cep: local.endereco?.cep?.replace('-', '') || "",
                 endereco: local.endereco?.logradouro || "",
                 cidade: local.endereco?.cidade || "",
                 complemento: local.endereco?.complemento || "",
@@ -62,8 +62,6 @@ export const ExerciciosContextProvider = ({ children }) => {
 
 
     async function cadastrarNovoLocal(formCadastro, setError) {
-        const userSession = JSON.parse(localStorage.getItem('userSession'));
-        const userId = userSession?.decoded?.id;
         const token = localStorage.getItem('tokenJWT');
 
         const dataForm = {
