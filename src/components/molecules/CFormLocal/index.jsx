@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
 import { CepContext } from "../../../context/CepContext";
 import { ExerciciosContext } from "../../../context/ExercicioContext";
-import styles from "../../templates/CTemplateListaLocais";
+import styles from "../../templates/CTemplateListaLocais/styles.module.css";
 
 function CFormLocal({ local, onSubmit }) {
  let errorCep = "Endereço obrigatório";
