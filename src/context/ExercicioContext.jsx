@@ -15,6 +15,11 @@ export const ExerciciosContextProvider = ({ children }) => {
     const usuarioId = userSession?.decoded?.id;
 
 
+    useEffect(() => {
+        LerLocaisCadastrados();
+    }, []); 
+
+
     function tranformarDadosEnvio(dados) {
         return {
             nome: dados.nome,
@@ -66,7 +71,6 @@ export const ExerciciosContextProvider = ({ children }) => {
 
 
     useEffect(() => {
-        LerLocaisCadastrados()
         if (data) {
             setPositionMarker(() => {
                 return data.map((exercicio) => {
