@@ -8,18 +8,21 @@ import { formatarCEP } from "../validation/registrationValidationSchema";
 
 export const ExerciciosContextProvider = ({ children }) => {
     const API_URL_BACK = "http://localhost:3333/api/locais";
-    const API_URL = "http://localhost:3000/exercicios";
+    //const API_URL = "http://localhost:3000/exercicios";
 
     const [locais, setLocais] = useState([]);
+    const [locaisUsuario, setLocaisUsuario] = useState([]);
     const [positionMarker, setPositionMarker] = useState([]);
 
 
     const { data, loading, isVisible } = useFetch(API_URL_BACK);
-    const usuarioId = JSON.parse(localStorage.getItem("userId"));
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    const usuarioId = userSession?.decoded?.id;
+    //const usuarioId = JSON.parse(localStorage.getItem("userId"));
 
 
 
-    const locaisUsuario = data?.filter((exercicio) => exercicio.user_id === usuarioId) || [];
+    //const locaisUsuario = data?.filter((exercicio) => exercicio.user_id === usuarioId) || [];
     //const positionMarker = data?.map(({ latitude, longitude }) => ({ latitude, longitude })) || [];
 
 
@@ -27,6 +30,7 @@ export const ExerciciosContextProvider = ({ children }) => {
         if (data) {
             const locaisConvertidos = data.map(local => ({
                 id: local.id,
+                id_usuario: local.user_id,
                 nome: local.nome || "",
                 tipo: local.pratica_esportiva || "",
                 descricao: local.descricao || "",
@@ -49,9 +53,10 @@ export const ExerciciosContextProvider = ({ children }) => {
                 });
             });
 
-            // Use 'locaisConvertidos' conforme necessário
-            console.log(locaisConvertidos);
             setLocais(locaisConvertidos)
+            setLocaisUsuario(
+                locaisConvertidos.filter((exercicio) => exercicio.id_usuario === usuarioId) || []
+            );
         }
     }, [data]);
 
