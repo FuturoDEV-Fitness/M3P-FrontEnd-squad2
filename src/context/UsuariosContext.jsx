@@ -211,6 +211,10 @@ export const UsuariosContextProvider = ({ children }) => {
             message: errorData.mensagem,
           });
         }
+
+        if(errorData.mensagem === "Senha inválida"){
+          toast.error(errorData.mensagem);
+        }
         throw new Error();
       }
       setLoading(false)
