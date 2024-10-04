@@ -9,17 +9,19 @@ import { CepContext } from "../../../context/CepContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchemaPerfil } from "../../../validation/perfilValidationSchema";
+import useAuth from "../../../hooks/useAuth";
 
 function CFormPerfil() {
   const { buscarCep } = useContext(CepContext);
 
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const { getUser, user, options } = useContext(UsuariosContext);
+  const { getUser, updateUser, user, options } = useContext(UsuariosContext);
+  const { tokenJWT } = useAuth();
 
   useEffect(() => {
     getUser();
-  }, [user]);
+  }, [tokenJWT]);
 
   if (!user) {
     return <Loading />;
@@ -31,13 +33,14 @@ function CFormPerfil() {
     reset,
     getValues,
     setValue,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchemaPerfil),
   });
   return (
     <form
-      onSubmit={handleSubmit((form) => console.log(form))}
+      onSubmit={handleSubmit((form) => updateUser(form, setError))}
       className={styles.perfil}
     >
       {Object.keys(user).length > 0 && (
@@ -124,7 +127,7 @@ function CFormPerfil() {
               error={errors.cep}
               helperText={errors.cep?.message}
               {...register("cep", {
-                onBlur: () => buscarCep(getValues, setValue),
+                onBlur: () => buscarCep(getValues, setValue, setError),
               })}
             ></CTextField>
 
@@ -137,7 +140,7 @@ function CFormPerfil() {
               type="text"
               error={errors.endereco}
               helperText={errors.endereco?.message}
-              {...register("endereco")}
+              {...register("logradouro")}
             ></CTextField>
 
             <CTextField
@@ -173,9 +176,9 @@ function CFormPerfil() {
               disabled={isDisabled}
               defaultValue={user.endereco.numero}
               type="number"
-              error={errors.endereco_numero}
-              helperText={errors.endereco_numero?.message}
-              {...register("endereco_numero")}
+              error={errors.numero}
+              helperText={errors.numero?.message}
+              {...register("numero")}
             ></CTextField>
 
             <CTextField
@@ -190,6 +193,24 @@ function CFormPerfil() {
               {...register("complemento")}
             ></CTextField>
           </div>
+          {isDisabled ? null : 
+          <div className={styles.inputPassword}>
+          <CTextField
+            label="Confirme sua senha *"
+            variant="standard"
+            fullWidth
+            type="password"
+            error={errors.password}
+            helperText={errors.password?.message}
+            {...register("password")}
+            InputProps={{
+              style: {
+                width: "50%",
+                marginLeft: 0, 
+              },
+            }}
+          />
+        </div>}          
 
           <div className={styles.buttons}>
             <CButton
@@ -204,11 +225,18 @@ function CFormPerfil() {
                         nome: user.nome,
                         email: user.email,
                         cpf: user.cpf,
-                        data_nascimento: user.data_nascimento,
                         sexo: user.sexo,
-                        cep: user.endereco.cep,
-                        endereco_numero: user.endereco.numero,
-                        complemento: user.endereco.complemento,
+                        data_nascimento: user.data_nascimento,
+                        endereco: 
+                          {
+                            cep: user.endereco.cep,
+                            logradouro: user.endereco.logradouro,
+                            numero: user.endereco.numero,
+                            complemento: user.endereco.complemento,
+                            bairro: user.endereco.bairro,
+                            estado: user.endereco.estado,
+                            cidade: user.endereco.cidade,
+                          },
                       });
                     }
                   : () => {
@@ -218,7 +246,8 @@ function CFormPerfil() {
                       let data_nasc = getValues("data_nascimento");
                       let sexo = getValues("sexo");
                       let cep = getValues("cep");
-                      let numero = getValues("endereco_numero");
+                      let numero = getValues("numero");
+                      let password = getValues("password");
 
                       // Validações
                       if (
@@ -231,7 +260,10 @@ function CFormPerfil() {
                         !sexo ||
                         cep.length < 8 ||
                         cep.length > 8 ||
-                        numero === ""
+                        numero < 1 ||
+                        numero.length > 8 ||
+                        password.length < 6 ||
+                        password.length > 16
                       ) {
                         return;
                       }

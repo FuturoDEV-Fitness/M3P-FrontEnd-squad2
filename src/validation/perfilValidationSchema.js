@@ -38,10 +38,14 @@ export const validationSchemaPerfil = Yup.object().shape({
     cep: Yup.string()
         .required("CEP obrigatório")
         .length(8, "CEP deve ter 8 caracteres"),
-    endereco_numero: Yup.string()
+    numero: Yup.string()
         .required("Número obrigatório")
         .max(8, "Número muito grande")
         .min(1, "Número muito pequeno"),
     complemento: Yup.string()
         .max(20, "Complemento muito grande"),
+    password: Yup.string()
+        .required("Senha obrigatória")
+        .max(16, "Senha muito grande")
+        .min(6, "Senha muito pequena"),
 });

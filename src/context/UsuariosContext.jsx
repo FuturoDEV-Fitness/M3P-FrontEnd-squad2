@@ -147,13 +147,13 @@ export const UsuariosContextProvider = ({ children }) => {
       const data = await res.json();
       const userData = {
         ...data,
-        cpf: data.cpf ? limparCPF(data.cpf) : "", // Valida se o CPF existe antes de limpar
+        cpf: data.cpf ? limparCPF(data.cpf) : "",
         data_nascimento: data.data_nascimento
           ? limparData(data.data_nascimento)
-          : "", // Valida se a data de nascimento existe
+          : "",
         endereco: {
-          ...data.endereco, // Mantém o restante do objeto endereco
-          cep: data.endereco && data.endereco.cep ? limparCEP(data.endereco.cep) : "", // Valida se o endereço e o CEP existem
+          ...data.endereco, 
+          cep: data.endereco && data.endereco.cep ? limparCEP(data.endereco.cep) : "",
         },
       };
       
@@ -163,6 +163,53 @@ export const UsuariosContextProvider = ({ children }) => {
       console.error("Erro ao buscar usuário:", error.message);
     }
   };
+
+  const updateUser = async (form, setError) => {
+    const dataUser = {
+      ...form,
+      cpf : formatarCPF(form.cpf),
+      data_nascimento : formatarData(form.data_nascimento),
+      endereco : {
+        ...form.endereco,
+        cep : formatarCEP(form.endereco.cep),
+      }
+    }
+    try{
+      const res = await fetch(`${url}/usuarios/${session.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenJWT}`,
+        },
+        body: JSON.stringify(dataUser),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+
+        if (errorData.mensagem === "Email já cadastrado por outro usuário") {
+          setError("email", {
+            type: "manual",
+            message: errorData.mensagem,
+          });
+        }
+
+        if (errorData.mensagem === "CPF já cadastrado por outro usuário") {
+          setError("cpf", {
+            type: "manual",
+            message: errorData.mensagem,
+          });
+        }
+        throw new Error
+      }
+
+
+      toast.success("Usuário atualizado com sucesso!");
+      return 
+    } catch {
+      toast.error("Erro ao atualizar usuário!");
+    } 
+  }
 
   const options = [
     { label: "Masculino", value: "masculino" },
@@ -177,6 +224,7 @@ export const UsuariosContextProvider = ({ children }) => {
         onSubmitFormLogin,
         logout,
         getUser,
+        updateUser,
         user,
         options,
       }}

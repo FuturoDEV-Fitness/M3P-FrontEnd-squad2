@@ -106,7 +106,7 @@ function CFormCadastroUsuario() {
           type="number"
           fullWidth
           {...register("cep", {
-            onBlur: () => buscarCep(getValues, setValue),
+            onBlur: () => buscarCep(getValues, setValue, setError),
           })}
           error={!!errors.cep}
           helperText={errors.cep ? errors.cep.message : ""}

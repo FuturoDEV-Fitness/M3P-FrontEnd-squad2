@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { toast } from "react-toastify";
 
 export const CepContext = createContext();
 
@@ -6,7 +7,7 @@ export const CepContextProvider = ({ children }) => {
 
   const [endereco, setEndereco] = useState(null);
 
-  const buscarCep = async (getValues, setValue) => {
+  const buscarCep = async (getValues, setValue, setError) => {
     let cep = getValues("cep");
 
     if (cep.length === 8) {
@@ -18,10 +19,15 @@ export const CepContextProvider = ({ children }) => {
         if (!data.code && !data.message) {
           alterarValues(data, setValue);
         } else {
-          alert("CEP não encontrado");
+          toast.error(`CEP ${cep} não encontrado`);
+          setError("cep", {
+            type: "manual",
+            message: `CEP ${cep} não encontrado`,
+          });
+          setValue("cep", "");
         }
       } catch (error) {
-        alert(error);
+        toast.error("Erro ao buscar CEP");
       }
     }
   };
