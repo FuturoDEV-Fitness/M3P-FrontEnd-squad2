@@ -10,12 +10,13 @@ export const ExerciciosContextProvider = ({ children }) => {
     const API_URL_BACK = "http://localhost:3333/api/locais";
     //const API_URL = "http://localhost:3000/exercicios";
 
-    const [locais, setLocais] = useState([]);
+    const [data, setData] = useState([]);
     const [locaisUsuario, setLocaisUsuario] = useState([]);
     const [positionMarker, setPositionMarker] = useState([]);
+    
 
 
-    const { data, loading, isVisible } = useFetch(API_URL_BACK);
+    //const { data, loading, isVisible } = useFetch(API_URL_BACK);
     const userSession = JSON.parse(localStorage.getItem('userSession'));
     const usuarioId = userSession?.decoded?.id;
     //const usuarioId = JSON.parse(localStorage.getItem("userId"));
@@ -26,9 +27,14 @@ export const ExerciciosContextProvider = ({ children }) => {
     //const positionMarker = data?.map(({ latitude, longitude }) => ({ latitude, longitude })) || [];
 
 
-    useEffect(() => {
-        if (data) {
-            const locaisConvertidos = data.map(local => ({
+    
+    async function LerLocaisCadastrados() {
+        try {
+            const res = await fetch(`${API_URL_BACK}`, {
+                method: "GET",
+            });
+            const data = await res.json();
+            const dataFormatada = data.map(local => ({
                 id: local.id,
                 id_usuario: local.user_id,
                 nome: local.nome || "",
@@ -43,9 +49,20 @@ export const ExerciciosContextProvider = ({ children }) => {
                 latitude: parseFloat(local.endereco?.latitude) || 0,
                 longitude: parseFloat(local.endereco?.longitude) || 0
             }));
+            setData(dataFormatada);
 
+        } catch (error) {
+            console.error(error);
+            toast.error("Erro ao ler os locais cadastrados");
+        }
+    }
+
+
+    useEffect(() => {
+        LerLocaisCadastrados()
+        if (data) {
             setPositionMarker(() => {
-                return locaisConvertidos.map((exercicio) => {
+                return data.map((exercicio) => {
                     return {
                         latitude: exercicio.latitude,
                         longitude: exercicio.longitude
@@ -53,9 +70,8 @@ export const ExerciciosContextProvider = ({ children }) => {
                 });
             });
 
-            setLocais(locaisConvertidos)
             setLocaisUsuario(
-                locaisConvertidos.filter((exercicio) => exercicio.id_usuario === usuarioId) || []
+                data.filter((exercicio) => exercicio.id_usuario === usuarioId) || []
             );
         }
     }, [data]);
@@ -98,6 +114,7 @@ export const ExerciciosContextProvider = ({ children }) => {
                 console.log(errorData)
                 throw new Error(errorData.mensagem || "Erro na requisição");
             }
+            LerLocaisCadastrados()
             toast.success("Local de exercício cadastrado com sucesso!");
             return true;
         } catch (error) {
@@ -109,9 +126,9 @@ export const ExerciciosContextProvider = ({ children }) => {
     return (
         <ExerciciosContext.Provider
             value={{
-                exercicios: locais || [],
-                isVisible,
-                loading,
+                exercicios: data || [],
+                //isVisible,
+                //loading,
                 locaisUsuario,
                 positionMarker,
                 cadastrarNovoLocal
