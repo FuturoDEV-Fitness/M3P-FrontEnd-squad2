@@ -30,6 +30,7 @@ export const UsuariosContextProvider = ({ children }) => {
 
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
+  const [userAtivos, setUserAtivos] = useState([]);
 
   async function onSubmitFormCadastro(formCadastro, setError) {
     setLoading(true);
@@ -76,13 +77,13 @@ export const UsuariosContextProvider = ({ children }) => {
         }
         throw new Error(errorData.mensagem || "Erro na requisição");
       }
-      setLoading(false)
+      setLoading(false);
       toast.success("Usuário cadastrado com sucesso!");
       return true;
     } catch (error) {
       console.error(error);
       toast.error("Erro ao cadastrar usuário!");
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -112,15 +113,15 @@ export const UsuariosContextProvider = ({ children }) => {
     } catch (error) {
       if (error.message === "Usuário não encontrado") {
         toast.error("E-mail ou senha incorreta");
-        setLoading(false)
+        setLoading(false);
         return;
       }
       if (error.message !== "E-mail ou senha incorreta") {
         toast.error("Erro ao fazer login! Tente novamente mais tarde.");
-        setLoading(false)
+        setLoading(false);
         return;
       }
-      setLoading(false)
+      setLoading(false);
       toast.error(error.message);
     }
   };
@@ -175,8 +176,31 @@ export const UsuariosContextProvider = ({ children }) => {
     }
   };
 
+  const getAllActiveUsers = async () => {
+    try {
+      const res = await fetch(`${url}/usuarios/ativos`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenJWT}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+
+      const data = await res.json();
+      setUserAtivos(data)
+      return; 
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const updateUser = async (form, setError) => {
-    setLoading(true)
+    setLoading(true);
     const dataUser = {
       ...form,
       cpf: formatarCPF(form.cpf),
@@ -213,11 +237,11 @@ export const UsuariosContextProvider = ({ children }) => {
         }
         throw new Error();
       }
-      setLoading(false)
+      setLoading(false);
       toast.success("Usuário atualizado com sucesso!");
       return;
     } catch {
-      setLoading(false)
+      setLoading(false);
       toast.error("Erro ao atualizar usuário!");
     }
   };
@@ -258,11 +282,13 @@ export const UsuariosContextProvider = ({ children }) => {
         onSubmitFormLogin,
         logout,
         getUser,
+        getAllActiveUsers,
         updateUser,
         deleteUser,
         user,
+        userAtivos,
         options,
-        loading
+        loading,
       }}
     >
       {children}
