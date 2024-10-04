@@ -1,30 +1,19 @@
 import { createContext, useState, useEffect } from "react";
-import useFetch from "../hooks/useFetch";
 import { toast } from 'react-toastify'
+import { formatarCEP } from "../validation/registrationValidationSchema";
 
 export const ExerciciosContext = createContext();
 
-import { formatarCEP } from "../validation/registrationValidationSchema";
-
 export const ExerciciosContextProvider = ({ children }) => {
     const API_URL_BACK = "http://localhost:3333/api/locais";
-    //const API_URL = "http://localhost:3000/exercicios";
 
     const [data, setData] = useState([]);
     const [locaisUsuario, setLocaisUsuario] = useState([]);
     const [positionMarker, setPositionMarker] = useState([]);
 
-
-
-    //const { data, loading, isVisible } = useFetch(API_URL_BACK);
     const userSession = JSON.parse(localStorage.getItem('userSession'));
     const usuarioId = userSession?.decoded?.id;
-    //const usuarioId = JSON.parse(localStorage.getItem("userId"));
 
-
-
-    //const locaisUsuario = data?.filter((exercicio) => exercicio.user_id === usuarioId) || [];
-    //const positionMarker = data?.map(({ latitude, longitude }) => ({ latitude, longitude })) || [];
 
     function tranformarDadosEnvio(dados) {
         return {
@@ -100,7 +89,7 @@ export const ExerciciosContextProvider = ({ children }) => {
 
         const dataForm = tranformarDadosEnvio(formCadastro)
 
-        console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
+        //console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
 
         try {
             const res = await fetch(`${API_URL_BACK}`, {
@@ -182,8 +171,6 @@ export const ExerciciosContextProvider = ({ children }) => {
         <ExerciciosContext.Provider
             value={{
                 exercicios: data || [],
-                //isVisible,
-                //loading,
                 locaisUsuario,
                 positionMarker,
                 cadastrarNovoLocal,
