@@ -43,7 +43,7 @@ export const ExerciciosContextProvider = ({ children }) => {
             const data = await res.json();
             const dataFormatada = data.map(local => ({
                 id: local.id,
-                id_usuario: local.user_id,
+                id_usuario: local.usuarioId,
                 nome: local.nome || "",
                 tipo: local.pratica_esportiva || "",
                 descricao: local.descricao || "",
