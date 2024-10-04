@@ -1,9 +1,7 @@
-function Locais(){
-    return (
-        <div>
-            <h1>Locais</h1>
-        </div>
-    )
+import CTemplateListaLocais from "../../components/templates/CTemplateListaLocais";
+
+function Locais() {
+ return <CTemplateListaLocais />;
 }
 
-export default Locais
+export default Locais;
