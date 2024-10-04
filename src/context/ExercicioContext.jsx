@@ -158,7 +158,25 @@ export const ExerciciosContextProvider = ({ children }) => {
     }
 
 
-    
+    async function deletarLocal(id) {
+        const token = localStorage.getItem('tokenJWT');
+        fetch(`${API_URL_BACK}/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(() => {
+                LerLocaisCadastrados()
+                toast.success("Local de exercício deletado com sucesso!");
+            })
+            .catch(() => {
+                console.error(error);
+                toast.error("Erro ao deletar local de exercício!");
+            })
+    }
+
 
     return (
         <ExerciciosContext.Provider
@@ -169,7 +187,8 @@ export const ExerciciosContextProvider = ({ children }) => {
                 locaisUsuario,
                 positionMarker,
                 cadastrarNovoLocal,
-                atualizarLocais
+                atualizarLocais,
+                deletarLocal
             }}>
             {children}
         </ExerciciosContext.Provider>

@@ -18,7 +18,7 @@ function CFormLocal({ local, onSubmit }) {
   formState: { errors }
  } = useForm();
  const { buscarCep } = useContext(CepContext);
- const { deleteLocal } = useContext(ExerciciosContext);
+ const { deletarLocal } = useContext(ExerciciosContext);
  const [isDisabled, setIsDisabled] = useState(true);
 
  const tipos = [
@@ -250,7 +250,7 @@ function CFormLocal({ local, onSubmit }) {
      {isDisabled ? "Editar" : "Salvar"}
     </CButton>
     <CButton
-     onClick={() => deleteLocal(local.id)}
+     onClick={() => deletarLocal(local.id)}
      variant="outlined"
      sx={{
       color: "#990000",
