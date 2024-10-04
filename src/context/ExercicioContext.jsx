@@ -70,7 +70,7 @@ export const ExerciciosContextProvider = ({ children }) => {
             descricao: formCadastro.descricao,
             endereco: {
                 logradouro: formCadastro.endereco,
-                //numero: formCadastro.numero,
+                numero: formCadastro.numero,
                 //bairro: formCadastro.district,
                 cidade: formCadastro.cidade,
                 estado: formCadastro.estado,
