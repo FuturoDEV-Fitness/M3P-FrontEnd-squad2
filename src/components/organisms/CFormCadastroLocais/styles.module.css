@@ -1,21 +1,14 @@
 .textFields {
+    width: 100%;
+}
+
+.textFields2 {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: .8fr .8fr 1.6fr 1.6fr;
     gap: 1rem;
     width: 100%;
 }
 
-.textFieldsCep {
-    display: grid;
-    grid-template-columns: 1.3fr 3fr 2fr 0.6fr;
-    gap: 1rem;
-}
-
-.textFieldsCep2 {
-    display: grid;
-    grid-template-columns: 1.5fr 3fr 3fr;
-    gap: 1rem;
-}
 
 .btn {
     width: 100%;
@@ -27,15 +20,6 @@
 @media (max-width: 800px) {
     .formCad {
         height: 100% !important;
-    }
-
-    .textFieldsCep {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-    }
-
-    .textFieldsCep2 {
-        grid-template-columns: 0.6fr 1fr 1fr;
     }
 
     .btn {

@@ -1,4 +1,4 @@
-import styles from "../../templates/CTemplateListaLocais/styles.module.css";
+import styles from "./styles.module.css";
 import Map from "../../atoms/Map";
 import CFormLocal from "../../molecules/CFormLocal";
 

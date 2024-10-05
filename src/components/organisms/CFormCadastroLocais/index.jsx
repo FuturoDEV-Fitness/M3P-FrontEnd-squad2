@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { ExerciciosContext } from "../../../context/ExercicioContext";
 import { CepContext } from "../../../context/CepContext";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { validationSchemaLocal } from "../../../validation/localValidationSchema";
 function CFormCadastroLocais() {
   const tipos = [
     "Caminhada",
@@ -23,9 +25,11 @@ function CFormCadastroLocais() {
     formState: { errors },
     setValue,
     getValues
-  } = useForm();
+  } = useForm({
+    resolver : yupResolver(validationSchemaLocal),
+  });
 
-  const { usuarioLogado, cadastrarNovoLocal } = useContext(ExerciciosContext);
+  const { cadastrarNovoLocal } = useContext(ExerciciosContext);
   const { buscarCep } = useContext(CepContext);
   return (
     <form
@@ -37,90 +41,54 @@ function CFormCadastroLocais() {
         width: "90%",
         display: "flex",
         flexDirection: "column",
-        gap: "0.3rem",
+        gap: ".4rem",
         paddingTop: "0.5rem",
         alignItems: "center"
       }}>
       <div className={styles.textFields}>
         <CTextField
-          label="Nome do local"
+          label="Nome do local *"
           variant="outlined"
           type="text"
           fullWidth
-          {...register("nome", {
-            required: "Nome do local obrigatório",
-            maxLength: {
-              value: 50,
-              message: "O nome do local deve ter no maximo 50 caracteres"
-            }
-          })}
+          errors={errors.nome?.message}
+          helperText={errors.nome?.message}
+          {...register("nome")}
         />
-        <CTextField
-          label="Tipo"
+
+      </div>
+      <div className={styles.textFields2}>
+
+      <CTextField
+          label="Tipo *"
           variant="outlined"
           select
           defaultValue=""
-          {...register("tipo", { required: "Tipo obrigatório" })}>
+          fullWidth
+          errors={errors.tipo?.message}
+          helperText={errors.tipo?.message}
+          {...register("tipo")}>
+
           {tipos.map((tipo, index) => (
             <MenuItem key={index} value={tipo}>
               {tipo}
             </MenuItem>
           ))}
+
         </CTextField>
-      </div>
-      <div>
-        <div
-          style={{
-            fontSize: "10px",
-            display: "flex",
-            justifyContent: "space-around",
-            width: "50vw"
-          }}>
-          {errors.nome && <p style={{ color: "red" }}>{errors.nome.message}</p>}
-          {errors.tipo && <p style={{ color: "red" }}>{errors.tipo.message}</p>}
-        </div>
-      </div>
-      {/* {Object.keys(usuarioLogado).length > 0 && (
-    <div className={styles.textFields}>
-     <CTextField
-      label="Usuario"
-      variant="outlined"
-      type="text"
-      fullWidth
-      disabled
-      defaultValue={usuarioLogado.nome}
-      {...register("nome_usuario")}
-     />
-     <CTextField
-      label="Id do usuario"
-      variant="outlined"
-      type="text"
-      fullWidth
-      defaultValue={usuarioLogado.id}
-      disabled
-      {...register("id_usuario")}
-     />
-    </div>
-   )} */}
-      <div className={styles.textFieldsCep}>
+
         <CTextField
-          label="CEP"
+          label="CEP *"
           variant="outlined"
           type="number"
           fullWidth
+          errors={errors.cep?.message}
+          helperText={errors.cep?.message}
           {...register("cep", {
-            required: "Cep obrigatório",
-            minLength: {
-              value: 8,
-              message: "Cep deve ter no minimo 8 digitos"
-            },
-            maxLength: {
-              value: 8,
-              message: "Cep deve ter no maximo 8 digitos"
-            },
             onBlur: () => buscarCep(getValues, setValue)
           })}
         />
+
         <CTextField
           label="Logradouro"
           variant="outlined"
@@ -128,8 +96,9 @@ function CFormCadastroLocais() {
           fullWidth
           defaultValue=" "
           disabled
-          {...register("endereco", { required: "Logradouro obrigatório" })}
+          {...register("endereco")}
         />
+
         <CTextField
           label="Cidade"
           variant="outlined"
@@ -137,82 +106,70 @@ function CFormCadastroLocais() {
           fullWidth
           defaultValue=" "
           disabled
-          {...register("cidade", { required: "Cidade obrigatoria" })}
+          {...register("cidade")}
         />
-        <CTextField
+
+      </div>
+      <div className={styles.textFields2}>
+
+      <CTextField
           label="Estado"
           variant="outlined"
           type="text"
           fullWidth
           defaultValue=" "
           disabled
-          {...register("estado", { required: "Estado obrigatorio" })}
+          {...register("estado")}
         />
-      </div>
-      <div className={styles.textFieldsCep2}>
+
         <CTextField
-          label="Numero"
+          label="Numero *"
           variant="outlined"
           type="text"
           fullWidth
+          errors={errors.numero?.message}
+          helperText={errors.numero?.message}
           {...register("numero")}
         />
+
         <CTextField
-          label="Latitude"
+          label="Latitude *"
           variant="outlined"
           defaultValue=" "
           type="text"
           fullWidth
-          {...register("latitude", { required: "Latitude obrigatoria" })}
+          errors={errors.latitude?.message}
+          helperText={errors.latitude?.message}
+          {...register("latitude")}
         />
+
         <CTextField
-          label="Longitude"
+          label="Longitude *"
           variant="outlined"
           defaultValue=" "
           type="text"
           fullWidth
-          {...register("longitude", { required: "Longitude obrigatoria" })}
+          errors={errors.longitude?.message}
+          helperText={errors.longitude?.message}
+          {...register("longitude")}
         />
+
       </div>
-      <div style={{ fontSize: "10px" }}>
-        {(errors.cep ||
-          errors.endereco ||
-          errors.cidade ||
-          errors.estado ||
-          //errors.numero ||
-          errors.latitude ||
-          errors.longitude) && <p style={{ color: "red" }}>Endereço Obrigatório</p>}
-      </div>
+
       <CTextField
-        label="Descrição"
+        label="Descrição *"
         variant="outlined"
         type="text"
         rows={1}
         fullWidth
         multiline
-        {...register("descricao", {
-          required: "Descrição obrigatoria",
-          maxLength: {
-            value: 293,
-            message: "Maximo de 293 caracteres"
-          },
-          minLength: {
-            value: 5,
-            message: "Minimo de 5 caracteres"
-          }
-        })}
+        errors={errors.descricao?.message}
+        helperText={errors.descricao?.message}
+        {...register("descricao")}
       />
-      <div style={{ fontSize: "10px" }}>
-        {errors.descricao && (
-          <p style={{ color: "red" }}>{errors.descricao.message}</p>
-        )}
-      </div>
+      
       <div className={styles.btn}>
         <CButton
-          // onClick={() => {
-          //   setValue("id_usuario", usuarioLogado.id);
-          //   setValue("nome_usuario", usuarioLogado.nome);
-          // }}
           variant="contained"
           type="submit"
           sx={{

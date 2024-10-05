@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export const validationSchemaEditarLocal = Yup.object().shape({
+export const validationSchemaLocal = Yup.object().shape({
     nome: Yup.string()
         .required("Nome do local obrigatório")
         .max(30, "Nome do local muito grande")
