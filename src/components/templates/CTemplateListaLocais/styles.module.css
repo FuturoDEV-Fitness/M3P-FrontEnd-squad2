@@ -1,0 +1,73 @@
+.container {
+    width: 100vw;
+    min-height: 80vh;
+    background-color: #EFF6E0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 5rem;
+}
+
+.titleContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    color: #01161E;
+}
+
+.cardContainer {
+    display: flex;
+    width: 75%;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.semLocais {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 65vh;
+    padding-bottom: 15vh;
+}
+
+@media (max-width: 800px) {
+    .container {
+        padding: 2rem 1rem;
+    }
+    
+    .titleContainer {
+        font-size: 12px;
+        padding: 0 1rem;
+
+    }
+
+    .titleContainer button {
+        font-size: 9px;
+    }
+
+    .titleContainer a {
+        width: 40vw;
+    }
+
+    .cardContainer {
+        width: 90%;
+    }
+
+    .card {
+        flex-direction: column;
+    }
+}
+
+@media ((min-width: 801px) and (max-width: 1200px)) {
+    .cardContainer {
+        width: 90%;
+    }
+}

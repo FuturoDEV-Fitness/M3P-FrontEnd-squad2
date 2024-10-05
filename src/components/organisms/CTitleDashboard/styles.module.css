@@ -1,0 +1,28 @@
+.title_info {
+    display: flex;
+    gap: 1rem;
+}
+
+.count {
+    font-weight: bold;
+}
+
+@media (max-width: 800px) {
+    .title_info {
+        margin-top: 1rem;
+    }
+    .titleExercicios {
+        margin-right: 10rem !important;
+    }
+
+    .titleExercicios p {
+        width: 40vw;
+    }
+
+    .titleOnline {
+        margin-left: 10rem !important;
+        padding: 0 !important;
+    }
+
+    
+}
