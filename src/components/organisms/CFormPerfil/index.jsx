@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import CTextField from "../../atoms/CTextField";
 import CButton from "../../atoms/CButton";
-import Loading from "../../atoms/Loading";
+import Loading from "../../atoms/loading";
 import LoadingReq from "../../atoms/loadingReq";
 import { MenuItem } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
