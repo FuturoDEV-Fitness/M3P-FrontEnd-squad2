@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { ExerciciosContext } from "./context/ExercicioContext";
 import Header from "./components/atoms/header";
 import Footer from "./components/atoms/footer";
-import Loading from "./components/atoms/Loading";
+import Loading from "./components/atoms/loading";
 
 function App() {
   return (
