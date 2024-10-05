@@ -83,7 +83,7 @@ export const ExerciciosContextProvider = ({ children }) => {
             });
 
             setLocaisUsuario(
-                data.filter((exercicio) => exercicio.id_usuario === usuarioId) || []
+                (data.filter((exercicio) => exercicio.id_usuario === usuarioId) || []).reverse()
             );
         }
     }, [data]);
