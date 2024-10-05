@@ -26,8 +26,9 @@
 
 @media (max-width: 800px) {
     .container {
-        height: 140vh !important;
+        height: 100% !important;
         justify-content: start;
+        padding: 0 1rem;
     }
 
     .title {
@@ -38,16 +39,29 @@
     .formCadastro {
         width: 90%;
         padding-bottom: 1.5rem;
+        margin-bottom: 5rem;
     }
 }
 
 @media ((min-width: 801px) and (max-width: 1200px)) {
+    .container{
+        padding: 0 2rem;
+        height: 100% !important;
+    }
     .title {
         height: 15vh;
         display: flex;
         align-items: center;
     }
 
+    .formCadastro {
+        width: 85%;
+        min-height: 100%;
+        margin-bottom: 5rem;
+    }
+}
+
+@media (min-width: 1919px) {
     .formCadastro {
         width: 80%;
     }
