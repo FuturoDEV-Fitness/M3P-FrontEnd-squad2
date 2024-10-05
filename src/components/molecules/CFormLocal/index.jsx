@@ -6,6 +6,8 @@ import { useContext, useState } from "react";
 import { CepContext } from "../../../context/CepContext";
 import { ExerciciosContext } from "../../../context/ExercicioContext";
 import styles from "../../templates/CTemplateListaLocais/styles.module.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { validationSchemaEditarLocal } from "../../../validation/editarLocalValidationSchema";
 
 function CFormLocal({ local, onSubmit }) {
  let errorCep = "Endereço obrigatório";
@@ -16,7 +18,9 @@ function CFormLocal({ local, onSubmit }) {
   setValue,
   reset,
   formState: { errors }
- } = useForm();
+ } = useForm({
+  resolver: yupResolver(validationSchemaEditarLocal),
+ });
  const { buscarCep } = useContext(CepContext);
  const { deletarLocal } = useContext(ExerciciosContext);
  const [isDisabled, setIsDisabled] = useState(true);
@@ -39,18 +43,11 @@ function CFormLocal({ local, onSubmit }) {
      type="text"
      disabled={isDisabled}
      defaultValue={local.nome}
-     {...register("nome", {
-      required: "Nome do local obrigatório",
-      maxLength: {
-       value: 50,
-       message: "O nome do local deve ter no maximo 50 caracteres"
-      },
-      minLength: {
-       value: 3,
-       message: "Nome do local deve ter no mínimo 3 caracteres"
-      }
-     })}
+     error={!!errors.nome}
+     helperText={errors.nome ? errors.nome.message : ""}
+     {...register("nome")}
     />
+
     <CTextField
      label="CEP"
      variant="standard"
@@ -58,29 +55,10 @@ function CFormLocal({ local, onSubmit }) {
      type="number"
      disabled={isDisabled}
      defaultValue={local.cep}
-     {...register("cep", {
-      required: "CEP obrigatório",
-      maxLength: {
-       value: 8,
-       message: "CEP deve ter no máximo 8 digitos"
-      },
-      minLength: {
-       value: 8,
-       message: "CEP deve ter no mínimo 8 digitos"
-      },
-      onBlur: () => buscarCep(getValues, setValue)
-     })}
+     error={!!errors.cep}
+     helperText={errors.cep ? errorCep : ""}
+     {...register("cep")}
     />
-   </div>
-   <div
-    style={{
-     color: "red",
-     width: "100%",
-     fontSize: "10px",
-     marginTop: "10px",
-     marginBottom: "10px"
-    }}>
-    {errors.nome && <p>{errors.nome.message}</p>}
    </div>
 
    <div className={styles.inputsEndereco}>
@@ -91,10 +69,9 @@ function CFormLocal({ local, onSubmit }) {
      type="text"
      disabled
      defaultValue={local.endereco}
-     {...register("endereco", {
-      required: "Logradouro obrigatório"
-     })}
+     {...register("endereco")}
     />
+
     <CTextField
      label="Cidade"
      variant="standard"
@@ -104,6 +81,7 @@ function CFormLocal({ local, onSubmit }) {
      defaultValue={local.cidade}
      {...register("cidade")}
     />
+
     <CTextField
      label="Estado"
      variant="standard"
@@ -113,17 +91,22 @@ function CFormLocal({ local, onSubmit }) {
      defaultValue={local.estado}
      {...register("estado")}
     />
+
    </div>
+
    <div className={styles.inputsQuadruplo}>
     <CTextField
      label="Numero"
      variant="standard"
      disabled={isDisabled}
      fullWidth
-     type="text"
+     type="number"
      defaultValue={local.numero}
+     error={!!errors.numero}
+     helperText={errors.numero ? errors.numero.message : ""}
      {...register("numero")}
     />
+
     <CTextField
      label="Latitude"
      variant="standard"
@@ -131,10 +114,11 @@ function CFormLocal({ local, onSubmit }) {
      fullWidth
      type="text"
      defaultValue={local.latitude}
-     {...register("latitude", {
-      required: "Latitude obrigatoria"
-     })}
+     error={!!errors.latitude}
+     helperText={errors.latitude ? errors.latitude.message : ""}
+     {...register("latitude")}
     />
+
     <CTextField
      label="Longitude"
      variant="standard"
@@ -142,9 +126,9 @@ function CFormLocal({ local, onSubmit }) {
      disabled={isDisabled}
      type="text"
      defaultValue={local.longitude}
-     {...register("longitude", {
-      required: "Longitude obrigatoria"
-     })}
+     error={!!errors.longitude}
+     helperText={errors.longitude ? errors.longitude.message : ""}
+     {...register("longitude")}
     />
     <CTextField
      label="Tipo"
@@ -153,23 +137,18 @@ function CFormLocal({ local, onSubmit }) {
      disabled={isDisabled}
      fullWidth
      defaultValue={local.tipo}
-     {...register("tipo", { required: "Tipo obrigatorio" })}>
+     error={!!errors.tipo}
+     helperText={errors.tipo ? errors.tipo.message : ""}
+     {...register("tipo")}>
+
      {tipos.map((tipo) => (
       <MenuItem key={tipo} value={tipo}>
        {tipo}
       </MenuItem>
      ))}
+
     </CTextField>
-    <div
-     style={{
-      color: "red",
-      width: "200%",
-      fontSize: "10px"
-     }}>
-     {(errors.cep || errors.numero || errors.latitude || errors.longitude) && (
-      <p>{errorCep}</p>
-     )}
-    </div>
+
    </div>
    <CTextField
     label="Descrição"
@@ -179,27 +158,11 @@ function CFormLocal({ local, onSubmit }) {
     disabled={isDisabled}
     multiline
     defaultValue={local.descricao}
-    {...register("descricao", {
-     required: "Descrição obrigatoria",
-     maxLength: {
-      value: 293,
-      message: "Descricão muito grande (293 caracteres max)"
-     },
-     minLength: {
-      value: 5,
-      message: "Descricão muito pequena (5 caracteres min)"
-     }
-    })}
+    error={!!errors.descricao}
+    helperText={errors.descricao ? errors.descricao.message : ""}
+    {...register("descricao")}
    />
-   <div
-    style={{
-     color: "red",
-     width: "100%",
-     fontSize: "10px",
-     marginTop: "10px"
-    }}>
-    {errors.descricao && <p>{errors.descricao.message}</p>}
-   </div>
+
    <div className={styles.buttons}>
     <CButton
      type="submit"
