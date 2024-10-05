@@ -5,8 +5,8 @@ import { formatarCEP } from "../validation/registrationValidationSchema";
 export const ExerciciosContext = createContext();
 
 export const ExerciciosContextProvider = ({ children }) => {
-    const API_URL_BACK = "http://localhost:3333/api/locais";
-
+    const API_URL = import.meta.env.VITE_API_URL;
+    
     const [data, setData] = useState([]);
     const [locaisUsuario, setLocaisUsuario] = useState([]);
     const [positionMarker, setPositionMarker] = useState([]);
@@ -42,7 +42,7 @@ export const ExerciciosContextProvider = ({ children }) => {
 
     async function LerLocaisCadastrados() {
         try {
-            const res = await fetch(`${API_URL_BACK}`, {
+            const res = await fetch(`${API_URL}api/locais`, {
                 method: "GET",
             });
             const data = await res.json();
@@ -97,7 +97,7 @@ export const ExerciciosContextProvider = ({ children }) => {
         //console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
 
         try {
-            const res = await fetch(`${API_URL_BACK}`, {
+            const res = await fetch(`${API_URL}api/locais`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export const ExerciciosContextProvider = ({ children }) => {
         console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
 
         try {
-            const res = await fetch(`${API_URL_BACK}/${formRecadastro.id}`, {
+            const res = await fetch(`${API_URL}api/locais/${formRecadastro.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -154,7 +154,7 @@ export const ExerciciosContextProvider = ({ children }) => {
 
     async function deletarLocal(id) {
         const token = localStorage.getItem('tokenJWT');
-        fetch(`${API_URL_BACK}/${id}`, {
+        fetch(`${API_URL}api/locais/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

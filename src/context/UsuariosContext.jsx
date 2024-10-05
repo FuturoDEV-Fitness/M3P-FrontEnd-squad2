@@ -15,7 +15,7 @@ import {
 import useAuth from "../hooks/useAuth";
 
 export const UsuariosContext = createContext();
-let url = "http://localhost:3333/api";
+const API_URL = import.meta.env.VITE_API_URL;;
 
 export const UsuariosContextProvider = ({ children }) => {
   const { endereco } = useContext(CepContext);
@@ -53,7 +53,7 @@ export const UsuariosContextProvider = ({ children }) => {
     };
 
     try {
-      const res = await fetch(`${url}/usuarios`, {
+      const res = await fetch(`${API_URL}api/usuarios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export const UsuariosContextProvider = ({ children }) => {
   const onSubmitFormLogin = async (formLogin) => {
     setLoading(true);
     try {
-      const res = await fetch(`${url}/auth`, {
+      const res = await fetch(`${API_URL}api/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export const UsuariosContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await fetch(`${url}/auth/logout`, {
+      const res = await fetch(`${API_URL}api/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,7 +155,7 @@ export const UsuariosContextProvider = ({ children }) => {
         return setUser({});
       }
 
-      const res = await fetch(`${url}/usuarios/${session.id}`, {
+      const res = await fetch(`${API_URL}api/usuarios/${session.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +192,7 @@ export const UsuariosContextProvider = ({ children }) => {
 
   const getAllActiveUsers = async () => {
     try {
-      const res = await fetch(`${url}/usuarios/ativos`, {
+      const res = await fetch(`${API_URL}api/usuarios/ativos`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +225,7 @@ export const UsuariosContextProvider = ({ children }) => {
       },
     };
     try {
-      const res = await fetch(`${url}/usuarios/${session.id}`, {
+      const res = await fetch(`${API_URL}api/usuarios/${session.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -266,7 +266,7 @@ export const UsuariosContextProvider = ({ children }) => {
 
   const deleteUser = async (user_id) => {
     try {
-      const res = await fetch(`${url}/usuarios/${user_id}`, {
+      const res = await fetch(`${API_URL}api/usuarios/${user_id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
