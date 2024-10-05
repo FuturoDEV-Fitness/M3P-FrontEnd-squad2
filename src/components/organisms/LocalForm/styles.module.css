@@ -1,0 +1,10 @@
+.card {
+    display: flex;
+    width: 100%;
+}
+
+@media (max-width: 800px) {
+    .map {
+        width: 100% !important;
+    }
+}

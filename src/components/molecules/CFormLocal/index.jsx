@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
 import { CepContext } from "../../../context/CepContext";
 import { ExerciciosContext } from "../../../context/ExercicioContext";
-import styles from "../../templates/CTemplateListaLocais/styles.module.css";
+import styles from "./styles.module.css";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { validationSchemaEditarLocal } from "../../../validation/editarLocalValidationSchema";
+import { validationSchemaLocal } from "../../../validation/localValidationSchema";
 
 function CFormLocal({ local, onSubmit }) {
  let errorCep = "Endereço obrigatório";
@@ -19,7 +19,7 @@ function CFormLocal({ local, onSubmit }) {
   reset,
   formState: { errors }
  } = useForm({
-  resolver: yupResolver(validationSchemaEditarLocal),
+  resolver: yupResolver(validationSchemaLocal),
  });
  const { buscarCep } = useContext(CepContext);
  const { deletarLocal } = useContext(ExerciciosContext);
@@ -57,7 +57,9 @@ function CFormLocal({ local, onSubmit }) {
      defaultValue={local.cep}
      error={!!errors.cep}
      helperText={errors.cep ? errorCep : ""}
-     {...register("cep")}
+     {...register("cep", {
+      onBlur: () => buscarCep(getValues, setValue)
+    })}
     />
    </div>
 

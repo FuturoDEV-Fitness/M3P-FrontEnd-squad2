@@ -1,10 +1,20 @@
 .container {
     width: 100vw;
+    min-height: 80vh;
     background-color: #EFF6E0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    padding: 2rem 5rem;
+}
+
+.titleContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
 
 .title {
@@ -13,58 +23,10 @@
 
 .cardContainer {
     display: flex;
-    width: 65%;
+    width: 75%;
     background-color: white;
     border-radius: 10px;
     margin-bottom: 1rem;
-}
-
-.card {
-    display: flex;
-    width: 100%;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem;
-    width: 50%;
-}
-
-.buttons {
-    display: flex;
-    width: 100%;
-    justify-content: end;
-    margin-top: 0.5rem;
-    gap: 0.5rem;
-}
-
-.inputs {
-    display: flex;
-    gap: 1rem;
-    width: 100%;
-}
-
-.inputsEndereco {
-    display: grid;
-    grid-template-columns: 3fr 2fr 0.7fr;
-    gap: 1rem;
-}
-
-.inputsQuadruplo {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 1.5fr 2fr;
-    gap: 1rem;
-}
-
-.titleContainer {
-    display: flex;
-    width: 100%;
-    height: 15vh;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 5rem 0 2.5rem;
 }
 
 .semLocais {
@@ -97,29 +59,6 @@
 
     .card {
         flex-direction: column;
-    }
-
-    .map {
-        width: 100% !important;
-    }
-
-    .form {
-        width: 100%;
-    }
-
-    .inputs {
-        display: grid;
-        grid-template-columns: 3fr 2fr;
-    }
-
-    .inputsEndereco {
-        grid-template-columns: 2fr 1fr 0.7fr;
-    }
-
-    .inputsQuadruplo {
-        margin-top: 0.5rem;
-        grid-template-columns: 1fr 1.5fr;
-        grid-template-rows: 1fr 1fr;
     }
 }
 
