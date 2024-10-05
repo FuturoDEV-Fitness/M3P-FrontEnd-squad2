@@ -37,6 +37,8 @@ const alterarValues = (data, setValue) => {
     setValue("endereco", data.address || "");
     setValue("cidade", data.city || "");
     setValue("estado", data.state || "");
+    setValue("latitude", data.lat || "");
+    setValue("longitude", data.lng || "");
   };
 
   return (

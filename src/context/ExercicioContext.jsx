@@ -27,7 +27,7 @@ export const ExerciciosContextProvider = ({ children }) => {
             descricao: dados.descricao,
             endereco: {
                 logradouro: dados.endereco,
-                numero: dados.numero,
+                numero: dados.numero || "",
                 //bairro: dados.district,
                 cidade: dados.cidade,
                 estado: dados.estado,

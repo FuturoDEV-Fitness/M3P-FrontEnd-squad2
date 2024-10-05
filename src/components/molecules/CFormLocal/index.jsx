@@ -120,11 +120,9 @@ function CFormLocal({ local, onSubmit }) {
      variant="standard"
      disabled={isDisabled}
      fullWidth
-     type="number"
+     type="text"
      defaultValue={local.numero}
-     {...register("numero", {
-      required: "Numero obrigatorio"
-     })}
+     {...register("numero")}
     />
     <CTextField
      label="Latitude"

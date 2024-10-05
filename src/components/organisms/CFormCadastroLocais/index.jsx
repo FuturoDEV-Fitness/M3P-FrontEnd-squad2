@@ -153,13 +153,14 @@ function CFormCadastroLocais() {
         <CTextField
           label="Numero"
           variant="outlined"
-          type="Number"
+          type="text"
           fullWidth
-          {...register("numero", { required: "Numero obrigatorio" })}
+          {...register("numero")}
         />
         <CTextField
           label="Latitude"
           variant="outlined"
+          defaultValue=" "
           type="text"
           fullWidth
           {...register("latitude", { required: "Latitude obrigatoria" })}
@@ -167,6 +168,7 @@ function CFormCadastroLocais() {
         <CTextField
           label="Longitude"
           variant="outlined"
+          defaultValue=" "
           type="text"
           fullWidth
           {...register("longitude", { required: "Longitude obrigatoria" })}
@@ -177,7 +179,7 @@ function CFormCadastroLocais() {
           errors.endereco ||
           errors.cidade ||
           errors.estado ||
-          errors.numero ||
+          //errors.numero ||
           errors.latitude ||
           errors.longitude) && <p style={{ color: "red" }}>Endereço Obrigatório</p>}
       </div>
