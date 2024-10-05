@@ -4,6 +4,18 @@
 }
 
 @media (max-width: 800px) {
+    .card {
+        flex-direction: column;
+    }
+    .map {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1200px) {
+    .card {
+        flex-direction: column;
+    }
     .map {
         width: 100% !important;
     }
