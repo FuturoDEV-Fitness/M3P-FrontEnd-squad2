@@ -16,7 +16,8 @@
 
 @media (max-width: 800px) {
     .container {
-        height: 110vh;
+        height: 100% !important;
+        padding: 1rem;
     }
 
     .title {
@@ -27,10 +28,21 @@
 }
 
 @media ((min-width: 801px) and (max-width: 1200px)) {
+    .container {
+        height: 100% !important;
+        padding: 1rem;
+    }
 
     .title {
         height: 15vh;
         display: flex;
         align-items: center;
+    }
+}
+
+@media (min-width: 1919px) {
+    .container {
+        height: 100% !important;
+        padding: 2rem 10rem;
     }
 }

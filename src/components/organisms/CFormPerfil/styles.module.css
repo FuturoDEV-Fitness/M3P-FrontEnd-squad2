@@ -26,15 +26,25 @@
 @media (max-width: 800px) {
     .perfil {
         width: 90%;
+        height: 100%;
+        padding-bottom: 5rem;
     }
 
     .inputs {
+        flex-direction: column;
         gap: 0.5rem;
     }
 }
 
 @media ((min-width: 801px) and (max-width: 1200px)) {
     .perfil {
+        padding-bottom: 5rem;
         width: 90%;
+        height: 100%;
+    }
+
+    .inputs {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
