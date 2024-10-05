@@ -160,6 +160,7 @@ function CFormCadastroLocais() {
         <CTextField
           label="Latitude"
           variant="outlined"
+          defaultValue=" "
           type="text"
           fullWidth
           {...register("latitude", { required: "Latitude obrigatoria" })}
@@ -167,6 +168,7 @@ function CFormCadastroLocais() {
         <CTextField
           label="Longitude"
           variant="outlined"
+          defaultValue=" "
           type="text"
           fullWidth
           {...register("longitude", { required: "Longitude obrigatoria" })}
