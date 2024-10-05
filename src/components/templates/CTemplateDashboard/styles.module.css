@@ -35,4 +35,14 @@
         font-size: 12px;
         padding-bottom: 2rem;
     }
+
+    .div_cards {
+        padding: 0 1rem 2rem 1rem;
+    }
+}
+
+@media ((min-width: 801px) and (max-width: 1200px)) {
+    .div_cards {
+        padding: 0 2rem 2rem 2rem;
+    }
 }

@@ -12,3 +12,14 @@
     display: flex;
     gap: 1.5rem;
 }
+
+@media (max-width: 800px) {
+    .footer {
+        justify-content: center;
+        padding: 0 2rem;
+        flex-direction: column;
+        font-size: 14px;
+        text-align: center;
+        height: 10vh;
+    }
+}

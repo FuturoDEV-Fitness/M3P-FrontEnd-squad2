@@ -39,6 +39,10 @@
 }
 
 @media (max-width: 800px) {
+    .container {
+        padding: 2rem 1rem;
+    }
+    
     .titleContainer {
         font-size: 12px;
         padding: 0 1rem;
