@@ -275,6 +275,10 @@ export const UsuariosContextProvider = ({ children }) => {
       });
       if (!res.ok) {
         const errorData = await res.json();
+
+        if (errorData.mensagem === "Não é possível excluir um usuário com locais associados.") {
+          toast.error(errorData.mensagem);
+        }
         throw new Error(errorData.message);
       }
 
