@@ -14,7 +14,13 @@ export function limparData(data) {
     const mes = partes[1];
     const dia = partes[2];
 
-    return `${ano}-${mes}-${dia}`; // Retorna no formato dd/mm/aaaa
+    return `${ano}-${mes}-${dia}`; // Retorna no formato aaaa/mm/dd
+}
+
+export function limparDataPtBr(data) {
+    const [ano, mes, dia] = data.split("-"); // Separar a data original por '-'
+   
+    return `${dia}/${mes}/${ano}`;  // Retornar no formato dd/mm/aaaa
 }
 
 export const validationSchemaPerfil = Yup.object().shape({
@@ -27,9 +33,6 @@ export const validationSchemaPerfil = Yup.object().shape({
         .email("E-mail inválido")
         .max(60, "E-mail muito grande")
         .min(5, "E-mail muito pequeno"),
-    cpf: Yup.string()
-        .required("CPF obrigatório")
-        .length(11, "CPF deve ter 11 caracteres"),
     data_nascimento: Yup.string()
         .required("Data de nascimento obrigatória")
         .max(10, "Data de nascimento inválida")

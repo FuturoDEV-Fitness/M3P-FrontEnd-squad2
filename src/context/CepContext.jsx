@@ -34,7 +34,7 @@ export const CepContextProvider = ({ children }) => {
 
 const alterarValues = (data, setValue) => {
     setEndereco(data);
-    setValue("endereco", data.address || "");
+    setValue("logradouro", data.address || "");
     setValue("cidade", data.city || "");
     setValue("estado", data.state || "");
     setValue("latitude", data.lat || "");
