@@ -11,6 +11,7 @@ import {
   limparCPF,
   limparCEP,
   limparData,
+  limparDataPtBr,
 } from "../validation/perfilValidationSchema";
 import useAuth from "../hooks/useAuth";
 
@@ -215,15 +216,24 @@ export const UsuariosContextProvider = ({ children }) => {
 
   const updateUser = async (form, setError) => {
     setLoading(true);
+
     const dataUser = {
-      ...form,
-      cpf: formatarCPF(form.cpf),
-      data_nascimento: formatarData(form.data_nascimento),
+      nome: form.nome,
+      email: form.email,
+      data_nascimento: limparDataPtBr(form.data_nascimento),
+      sexo: form.sexo,
+      password: form.password,
       endereco: {
-        ...form.endereco,
-        cep: formatarCEP(form.endereco.cep),
+        logradouro: form.logradouro ? form.logradouro : form.endereco.logradouro,
+        numero: form.numero ? form.numero : form.endereco.numero,
+        bairro: endereco?.district ? endereco.district : form.endereco.bairro,
+        cidade: form.cidade ? form.cidade : form.endereco.cidade,
+        estado: form.estado ? form.estado : form.endereco.estado,
+        cep: formatarCEP(form.cep),
+        complemento: form.complemento || "",
       },
     };
+    
     try {
       const res = await fetch(`${API_URL}api/usuarios/${session.id}`, {
         method: "PUT",
@@ -239,7 +249,7 @@ export const UsuariosContextProvider = ({ children }) => {
         if (errorData.mensagem === "Email já cadastrado por outro usuário") {
           setError("email", {
             type: "manual",
-            message: errorData.mensagem,
+            message: "Este email já está em uso.",
           });
         }
 
@@ -258,7 +268,7 @@ export const UsuariosContextProvider = ({ children }) => {
       setLoading(false);
       toast.success("Usuário atualizado com sucesso!");
       return;
-    } catch {
+    } catch (error) {
       setLoading(false);
       toast.error("Erro ao atualizar usuário!");
     }

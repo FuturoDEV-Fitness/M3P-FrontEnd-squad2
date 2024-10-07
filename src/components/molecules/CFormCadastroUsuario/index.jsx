@@ -122,11 +122,11 @@ function CFormCadastroUsuario() {
           <CTextField
             disabled
             variant="standard"
-            label="Endereço"
+            label="Logradouro"
             type="text"
             defaultValue=" "
             fullWidth
-            {...register("endereco")}
+            {...register("logradouro")}
           />
           <CTextField
             disabled
