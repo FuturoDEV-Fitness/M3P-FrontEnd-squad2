@@ -26,7 +26,7 @@ export const ExerciciosContextProvider = ({ children }) => {
             pratica_esportiva: dados.tipo,
             descricao: dados.descricao,
             endereco: {
-                logradouro: dados.endereco,
+                logradouro: dados.logradouro ? dados.logradouro : dados.endereco,
                 numero: dados.numero || "",
                 //bairro: dados.district,
                 cidade: dados.cidade,
@@ -94,8 +94,6 @@ export const ExerciciosContextProvider = ({ children }) => {
 
         const dataForm = tranformarDadosEnvio(formCadastro)
 
-        //console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));
-
         try {
             const res = await fetch(`${API_URL}api/locais`, {
                 method: "POST",
@@ -123,6 +121,7 @@ export const ExerciciosContextProvider = ({ children }) => {
 
     async function atualizarLocais(formRecadastro) {
         const token = localStorage.getItem('tokenJWT');
+        console.log(formRecadastro)
         const dataForm = tranformarDadosEnvio(formRecadastro)
 
         console.log('Data being sent to the API:', JSON.stringify(dataForm, null, 2));

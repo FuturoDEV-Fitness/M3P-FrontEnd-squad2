@@ -96,7 +96,7 @@ function CFormCadastroLocais() {
           fullWidth
           defaultValue=" "
           disabled
-          {...register("endereco")}
+          {...register("logradouro")}
         />
 
         <CTextField

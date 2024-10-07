@@ -71,7 +71,7 @@ function CFormLocal({ local, onSubmit }) {
      type="text"
      disabled
      defaultValue={local.endereco}
-     {...register("endereco")}
+     {...register("logradouro")}
     />
 
     <CTextField

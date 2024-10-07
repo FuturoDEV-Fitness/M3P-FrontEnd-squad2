@@ -82,12 +82,9 @@ function CFormPerfil() {
               label="CPF"
               variant="standard"
               fullWidth
-              disabled={isDisabled}
+              disabled
               defaultValue={user.cpf}
               type="number"
-              error={errors.cpf}
-              helperText={errors.cpf?.message}
-              {...register("cpf")}
             ></CTextField>
 
             <CTextField
@@ -138,14 +135,14 @@ function CFormPerfil() {
             ></CTextField>
 
             <CTextField
-              label="Endereço"
+              label="Logradouro"
               variant="standard"
               fullWidth
               disabled
               defaultValue={user.endereco.logradouro}
               type="text"
-              error={errors.endereco}
-              helperText={errors.endereco?.message}
+              error={errors.logradouro}
+              helperText={errors.logradouro?.message}
               {...register("logradouro")}
             ></CTextField>
 
